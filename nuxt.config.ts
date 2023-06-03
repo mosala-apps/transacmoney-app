@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   modules: [
     "@kevinmarrec/nuxt-pwa",
     "@pinia/nuxt",
-    "@sidebase/nuxt-auth",
+   // "@sidebase/nuxt-auth",
     "@nuxtjs/color-mode",
     async (options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) =>
