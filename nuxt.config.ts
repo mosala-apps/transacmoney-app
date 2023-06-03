@@ -17,6 +17,9 @@ export default defineNuxtConfig({
   build: { transpile: ["vuetify"] },
   modules: [
     "@kevinmarrec/nuxt-pwa",
+    "@pinia/nuxt",
+    "@sidebase/nuxt-auth",
+    "@nuxtjs/color-mode",
     async (options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) =>
         // @ts-ignore
@@ -24,11 +27,17 @@ export default defineNuxtConfig({
       );
     },
   ],
-
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      "defineStore", // import { defineStore } from 'pinia'
+      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
+  },
   app: {
     head: {
-      title: "Vuetify 3 + Nuxt 3 Starter",
-      titleTemplate: "%s | Vuetify 3 + Nuxt 3 Starter",
+      title: "TransacMoney",
+      titleTemplate: "%s | TransacMoney",
       link: [
         { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
         { rel: "preconnect", href: "https://rsms.me/" },
