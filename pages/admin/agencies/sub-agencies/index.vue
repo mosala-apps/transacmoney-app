@@ -1,11 +1,11 @@
 <template>
   <sharedAdminContainer :subMenus="subMenus">
     <div class="pa-12">
-      <admin-agency-data-table
-        :data="agences"
-        titleSection="Liste des Agences"
-        :formFields="formFields"
-      />
+      <admin-agency-data-table 
+       :data="agences"
+        titleSection="Liste des sous Agences"
+       :formFields="formFields"
+       />
     </div>
   </sharedAdminContainer>
 </template>
@@ -23,32 +23,13 @@ const subMenus = reactive([
     path: "/admin/agencies/sub-agencies",
   },
 ]);
-const formFields = reactive([
-  {
-    name: "name",
-    type: "text",
-    id: "name",
-    label: "Nom de l'agence",
-  },
-  {
-    name: "email",
-    type: "email",
-    id: "email",
-    label: "Email de l'agence",
-  },
-  {
-    name: "telephone",
-    type: "text",
-    id: "phone",
-    label: "Telephone de l'agence",
-  },
-  {
-    name: "location",
-    type: "text",
-    id: "location",
-    label: "Lieu",
-  },
-]);
+
+const formFields = reactive([{
+    name: 'name',
+    type: 'text',
+    id: 'name',
+    label:"Nom de la sous agence"
+}])
 
 const agences = [
   {

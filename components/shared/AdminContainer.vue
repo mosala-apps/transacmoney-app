@@ -5,8 +5,11 @@
           <v-col cols="2">
             <v-sheet rounded="lg">
               <v-list rounded="lg">
-                <v-list-item v-for="item in props.subMenus" :key="item" link>
-                  <v-list-item-title> {{ item }} </v-list-item-title>
+                <v-list-item 
+                v-for="item in props.subMenus" 
+                :key="item" 
+                :to="item.path">
+                  <v-list-item-title> {{ item.name }} </v-list-item-title>
                 </v-list-item>
 
                 <v-divider class="my-2"></v-divider>

@@ -4,7 +4,7 @@
       <h2>{{ props.titleSection}}</h2>
       <shared-button
         btn-class="btn-primary"
-        label="Nouvelle agence"
+        label="Nouvelle sous agence"
         class="mb-2"
         @onClick="isOpenDrawer=!isOpenDrawer"
       />
@@ -27,11 +27,7 @@
       @pagination="handlePagination"
     >
     <template #top>
-      <admin-agency-form-create 
-      :isOpenDrawer="isOpenDrawer" 
-      @handleClose="close"
-      :formFields="formFields"
-      />
+      <admin-agency-sub-agency-form-create :isOpenDrawer="isOpenDrawer" @handleClose="close"/>
     </template>
     </v-data-table>
   </div>
@@ -44,10 +40,6 @@ const { pagination, rowsPerPageItems } = usePagination();
 
 const props = defineProps({
   data: {
-    type: Array,
-    default: () => {},
-  },
-  formFields: {
     type: Array,
     default: () => {},
   },

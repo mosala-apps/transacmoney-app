@@ -3,37 +3,22 @@
     <h4 class="ma-6 text-center text-uppercase">Créer une agence</h4>
     <v-divider></v-divider>
 
-    <form action="" class="pa-6">
-     
-      <div class="mt-1" v-for="(form, index) in props.formFields" :key="index">
-        <label class="label text-grey-darken-2" for="password">{{ form['label'] }}</label>
-        <v-textField
-          :rules="[validate.ruleRequired, validate.rulePassLen]"
-          v-model="completedFormFields[form['name']]"
-          :id="form['name']"
-          :name="form['name']"
-          :type="form['type']"
-        />
-      </div>
-    </form>
+    <v-list density="compact" nav>
+      <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
+      <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
+    </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
-const validate = useFormRules();
 type Props = {
-  isOpenDrawer: boolean;
-  formFields: [];
+  isOpenDrawer: boolean,
 };
 const emit = defineEmits<{
   (e: "handleClose", value: boolean): void;
 }>();
-
-
 const props = defineProps<Props>();
 let isOpen = ref<boolean>(props.isOpenDrawer);
-const completedFormFields = ref<Object>({})
-
 
 watch(
   () => props.isOpenDrawer,
