@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="d-flex justify-space-between">
-      <h2>{{ props.titleSection}}</h2>
+      <h2>{{ props.titleSection }}</h2>
       <shared-button
         btn-class="btn-primary"
-        label="Nouvelle agence"
+        :label="entityToCrud.formTitle"
         class="mb-2"
-        @onClick="isOpenDrawer=!isOpenDrawer"
+        @onClick="isOpenDrawer = !isOpenDrawer"
       />
     </div>
-   
+
     <v-data-table
-      :headers="headers"
+      :headers="props.headers"
       :items="props.data"
       :page="pagination.page"
       :items-per-page="pagination.itemsPerPage"
@@ -26,13 +26,16 @@
       }"
       @pagination="handlePagination"
     >
-    <template #top>
-      <admin-agency-form-create 
-      :isOpenDrawer="isOpenDrawer" 
-      @handleClose="close"
-      :formFields="formFields"
-      />
-    </template>
+      <template #top>
+        <shared-admin-form-create
+          :isOpenDrawer="isOpenDrawer"
+          :formFields="formFields"
+          :entityToCrud="entityToCrud"
+          @handleClose="close"
+          @handleSubmit="handleSubmit"
+        />
+        
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -40,41 +43,34 @@
 type Headers = InstanceType<typeof VDataTable>["headers"];
 import type { Header, Item } from "vue3-easy-data-table";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
+import { FormType } from "~/types/form.type";
+import { IEntityCrud } from "~/types/user.interface";
 const { pagination, rowsPerPageItems } = usePagination();
 
-const props = defineProps({
-  data: {
-    type: Array,
-    default: () => {},
-  },
-  formFields: {
-    type: Array,
-    default: () => {},
-  },
-  titleSection: {
-    type: String,
-    default: () => "",
-  },
-});
+export type Props = {
+  data: any[];
+  headers: any[];
+  formFields: Array<FormType> | []
+  titleSection: String | ""
+  entityToCrud: IEntityCrud,
+
+};
+
+const props = defineProps<Props>();
+const emit = defineEmits<{
+  (e: "handleSubmit", value: any): void;
+}>();
 const total = 100;
 let loading = ref(false);
 let isOpenDrawer = ref<boolean>(false);
 let searchTerm = ref("");
-const headers = reactive([
-  {
-    title: "Nom",
-    align: "start",
-    sortable: false,
-    key: "name",
-  },
-  { title: "solde", align: "end", key: "sold" },
-  { title: "Responsable", align: "end", key: "fat" },
-  { title: "Adresse", align: "end", key: "address" },
-  { title: "actions", align: "end", key: "carbs" },
-]);
-const handleOpenModal = () => {};
+
+
+const handleSubmit = (value: any) => {
+  emit("handleSubmit", value);
+};
 const handlePagination = () => {};
-const close =(value: boolean)=>{
+const close = (value: boolean) => {
   isOpenDrawer.value = value;
-}
+};
 </script>
