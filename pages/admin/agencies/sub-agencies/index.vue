@@ -1,8 +1,8 @@
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div class="pa-12">
+    <div class="pa-12" v-if="!error && data && data.length> 0">
       <shared-admin-data-table 
-       :data="agences"
+       :data="data"
        :headers="headers"
         titleSection="Liste des sous Agences"
        :formFields="formFields"
@@ -10,19 +10,26 @@
        @handleSubmit="handleSubmit"
        />
     </div>
+    <div v-else>
+       {{ error }}
+    </div>
   </sharedAdminContainer>
 </template>
 <script lang="ts" setup>
+import { API_URL } from '~/config/ApiURL';
 import { FormType } from '~/types/form.type';
 import { IEntityCrud } from '~/types/user.interface';
 const validate = useFormRules();
 
-
+let  reload = ref(false);
+const { data, error, execute, refresh } = await useFetch(`${API_URL}/subAgency`,{
+  watch:[reload]
+})
 definePageMeta({
   layout: "admin",
 });
 let entityToCrud: IEntityCrud = reactive({
-  name: "Agency",
+  name: "subAgency",
   formTitle: "Créer une sous-agence",
   btnTitle: "Enregistrer",
 })
@@ -53,7 +60,7 @@ const formFields:FormType[] = reactive<FormType[]>([
     rules: [validate.required, validate.email]
   },
   {
-    name: "telephone",
+    name: "phone",
     type: "text",
     id: "phone",
     label: "Telephone",
@@ -80,34 +87,9 @@ const headers = reactive([
   { title: "Adresse", align: "end", key: "address" },
   { title: "actions", align: "end", key: "actions" },
 ]);
-const agences = [
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-];
+
 
 const handleSubmit = (value:any) => {
-  // form = value
+  reload.value = true;
 };
 </script>

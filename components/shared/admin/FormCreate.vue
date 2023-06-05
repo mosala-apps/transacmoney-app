@@ -19,17 +19,34 @@
           :type="form.type"
         />
       </div>
-      <div v-if="entityToCrud.name === 'User'">
+      <div v-if="entityToCrud.name === 'user'">
         <v-autocomplete
+          v-model="completedFormField.role"
           chips
           label="Roles"
-          :items="['SUPER_ADMIM', 'ADMIN', 'AGENCY', 'SUB_AGENCY']"
+          :items="roles"
+          item-value="slug"
+          item-title="name"
           variant="outlined"
         ></v-autocomplete>
         <v-autocomplete
+         v-show="completedFormField.role=== 'agency'"
+          v-model="completedFormField.agencyId"
           chips
           label="Selectionner l'agence"
-          :items="['SUPER_ADMIM', 'ADMIN', 'AGENCY', 'SUB_AGENCY']"
+          :items="agencies"
+          item-value="id"
+          item-title="name"
+          variant="outlined"
+        ></v-autocomplete>
+        <v-autocomplete
+          v-show="completedFormField.role=== 'subAgency'"
+          v-model="completedFormField.subAgencyId"
+          chips
+          label="Selectionner la sous agence"
+          :items="subAgencies"
+          item-value="id"
+          item-title="name"
           variant="outlined"
         ></v-autocomplete>
       </div>
@@ -46,7 +63,10 @@
 <script setup lang="ts">
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
-
+import { API_URL } from "~/config/ApiURL";
+const { data: agencies } = await useFetch(`${API_URL}/agency`);
+const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+const roles = useRoles();
 type Props = {
   isOpenDrawer: boolean;
   formFields: FormType[];
@@ -60,7 +80,7 @@ const emit = defineEmits<{
 const props = defineProps<Props>();
 let isOpen = ref<boolean>(props.isOpenDrawer);
 
-const completedFormField: any = ref<any>({});
+const completedFormField: any = reactive<any>({});
 let isValid = ref<boolean>(false);
 let method = ref<string>("");
 
@@ -75,9 +95,14 @@ watch(isOpen, (valueselection) => {
   emit("handleClose", valueselection);
 });
 
-const onSubmit = () => {
-  method.value = `store${props.entityToCrud.name}`;
+const onSubmit = async () => {
+  method.value = `store`;
   isOpen.value = false;
+  let uri = props.entityToCrud.name === 'user'?'users': props.entityToCrud.name
+  await $fetch(`${API_URL}/${uri}/${method.value}`, {
+    method: "POST",
+    body: { ...completedFormField },
+  });
   emit("handleSubmit", completedFormField);
 };
 </script>

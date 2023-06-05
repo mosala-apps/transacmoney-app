@@ -3,8 +3,7 @@ import vuetify from "vite-plugin-vuetify";
 // PWA Config
 const title = "Vuetify 3 + Nuxt 3 Starter";
 const shortTitle = "Vuetify 3 + Nuxt 3 Starter";
-const description =
-  "Template to get you up and running with Nuxt 3 & Vuetify 3";
+const description = "Template to get you up and running with Nuxt 3 & Vuetify 3";
 const image = "https://vuetify3nuxt3starter.behonbaker.com/starter.png";
 const url = "https://vuetify3nuxt3starter.behonbaker.com/";
 
@@ -18,7 +17,8 @@ export default defineNuxtConfig({
   modules: [
     "@kevinmarrec/nuxt-pwa",
     "@pinia/nuxt",
-   // "@sidebase/nuxt-auth",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@sidebase/nuxt-auth",
     "@nuxtjs/color-mode",
     async (options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) =>
@@ -33,6 +33,25 @@ export default defineNuxtConfig({
       "defineStore", // import { defineStore } from 'pinia'
       ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
     ],
+  },
+  auth: {
+    baseURL:'http://localhost:4500/api',
+    globalAppMiddleware: true,
+    provider: {
+      pages:{
+        login:'auth/signin',
+      },
+      type: "local",
+      token:{
+          type: 'Bearer',
+          headerName:'access_token'
+      },
+      endpoints: {
+        signIn: { path: "/auth/login", method: "post" },
+        signOut: { path: "/logout", method: "post" },
+        signUp: { path: "/auth/register", method: "post" },
+      },
+    },
   },
   app: {
     head: {

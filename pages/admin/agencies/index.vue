@@ -1,19 +1,12 @@
-<template>
-  <sharedAdminContainer :subMenus="subMenus">
-    <div class="pa-12">
-      <shared-admin-data-table
-        :data="agences"
-        :headers="headers"
-        titleSection="Liste des Agences"
-        :entityToCrud="entityToCrud"
-        :formFields="formFields"
-      />
-    </div>
-  </sharedAdminContainer>
-</template>
+
 <script lang="ts" setup>
 import { FormType } from '~/types/form.type';
 import { IEntityCrud } from '~/types/user.interface';
+import {API_URL} from '~/config/ApiURL'
+let  reload = ref(false);
+const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`,{
+  watch:[reload]
+})
 const validate = useFormRules();
 definePageMeta({
   layout: "admin",
@@ -39,17 +32,24 @@ const formFields:FormType[] = reactive<FormType[]>([
     rules: [validate.required, validate.email]
   },
   {
-    name: "telephone",
+    name: "phone",
     type: "text",
     id: "phone",
     label: "Telephone de l'agence",
     rules: [validate.required]
   },
   {
-    name: "location",
+    name: "address",
     type: "text",
     id: "location",
     label: "Lieu",
+    rules: [validate.required]
+  },
+  {
+    name: "location",
+    type: "text",
+    id: "location",
+    label: "Ville",
     rules: [validate.required]
   },
 ]);
@@ -77,30 +77,23 @@ const headers = reactive([
   { title: "Adresse", align: "end", key: "address" },
   { title: "actions", align: "end", key: "actions" },
 ]);
-const agences = [
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    balance: 24,
-  },
-];
+
+const handleSubmit =(value:any)=>{
+  reload.value = true;
+}
 </script>
+
+<template>
+  <sharedAdminContainer :subMenus="subMenus">
+    <div class="pa-12">
+      <shared-admin-data-table
+        :data="data"
+        :headers="headers"
+        titleSection="Liste des Agences"
+        :entityToCrud="entityToCrud"
+        :formFields="formFields"
+        @handleSubmit="handleSubmit"
+      />
+    </div>
+  </sharedAdminContainer>
+</template>

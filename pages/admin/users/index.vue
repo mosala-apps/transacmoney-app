@@ -7,6 +7,7 @@
         titleSection="Liste des utilisateurs"
         :entityToCrud="entityToCrud"
         :formFields="formFields"
+        @handleSubmit="handleSubmit"
       />
     </div>
   </sharedAdminContainer>
@@ -14,16 +15,22 @@
 <script lang="ts" setup>
 import { FormType } from '~/types/form.type';
 import { IEntityCrud } from '~/types/user.interface';
+import {API_URL} from '~/config/ApiURL'
+
+let  reload = ref(false);
+const { data:users, error, execute, refresh } = await useFetch(`${API_URL}/users`,{
+  watch:[reload]
+})
 const validate = useFormRules()
 
 let entityToCrud: IEntityCrud = reactive({
-  name: "User",
+  name: "user",
   formTitle: "Créer un utilisateur",
   btnTitle: "Enregistrer",
 })
 const formFields:FormType[] = reactive<FormType[]>([
   {
-    name: "name",
+    name: "username",
     type: "text",
     id: "name",
     label: "Nom de l'utilisateur",
@@ -37,13 +44,6 @@ const formFields:FormType[] = reactive<FormType[]>([
     rules: [validate.required, validate.email]
   },
   {
-    name: "telephone",
-    type: "text",
-    id: "phone",
-    label: "Telephone",
-    rules: [validate.required]
-  },
-  {
     name: "password",
     type: "text",
     id: "location",
@@ -54,7 +54,6 @@ const formFields:FormType[] = reactive<FormType[]>([
 const subMenus = reactive([
   {
     name: "Agents",
-    path: "/admin/agencies",
   },
   {
     name: "Sous-Agents",
@@ -77,35 +76,11 @@ const headers = reactive([
     sortable: false,
     key: "email",
   },
-  { title: "solde", align: "end", key: "balance" },
-  { title: "Agence", align: "end", key: "agency" },
+  { title: "Agence", align: "end", key: "agency.name" },
   { title: "Adresse", align: "end", key: "address" },
   { title: "actions", align: "end", key: "actions" },
 ]);
-const users = [
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    sold: 24,
-  },
-  {
-    email: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    sold: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    sold: 24,
-  },
-  {
-    name: "Frozen Yogurt",
-    responsible: "rosaire",
-    address: "Kinshasa",
-    sold: 24,
-  },
-];
+const handleSubmit =(value:any)=>{
+  reload.value = true;
+}
 </script>
