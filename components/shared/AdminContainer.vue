@@ -1,14 +1,16 @@
 <template>
-     <v-main class="bg-grey-lighten-3" v-bind="props">
+     <v-main class="bg-slate" v-bind="props"  elevation="0" >
       <v-container>
         <v-row>
           <v-col cols="2">
-            <v-sheet rounded="lg">
-              <v-list rounded="lg">
+            <v-sheet rounded="lg" elevation="0">
+              <v-list rounded="sm">
                 <v-list-item 
                 v-for="item in props.subMenus" 
                 :key="item" 
-                :to="item.path">
+                :to="item.path"
+                color="primary"
+                >
                   <v-list-item-title> {{ item.name }} </v-list-item-title>
                 </v-list-item>
 
@@ -22,7 +24,7 @@
           </v-col>
 
           <v-col>
-            <v-sheet min-height="70vh" rounded="lg">
+            <v-sheet min-height="70vh" rounded="lg" elevation="0" border="0">
               <slot />
             </v-sheet>
           </v-col>

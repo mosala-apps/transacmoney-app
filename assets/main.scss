@@ -106,3 +106,18 @@ a {
     ) !important;
   }
 }
+.bg-slate{
+  background-color: rgb(239 246 255);
+}
+.text-slate{
+  color: rgb(100 116 139);
+  font-size: 1.4rem;
+  position: relative;
+  padding: 1rem;
+  border: 2px solid  rgba(67, 56, 202, 1);
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-radius: 8px;
+   
+}

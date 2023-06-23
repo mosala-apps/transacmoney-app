@@ -1,8 +1,8 @@
 <template>
   <v-main no-gutters>
-    <VRow class="fill-height">
+    <VRow>
       <VCol class="hidden-md-and-down fill-height" md="6" lg="6">
-        <VImg src="/images/hiro.jpeg" cover class="d-flex align-center justify-center">
+        <VImg src="/images/hiro.jpeg" cover class="d-flex align-center justify-center" width="100%">
           <div class="text-center w-50 text-white mx-auto">
             <h2 class="mb-4">Start your journey today</h2>
             <p>
@@ -17,8 +17,8 @@
         <VRow no-gutters align="center" justify="center">
           {{ JSON.stringify(status) }}
           <VCol cols="12" md="6">
-            <h1>Se Connecter</h1>
-            <p class="text-medium-emphasis">Saisissez vos coordonnées pour commencer</p>
+            <h1 class="text-center">Se Connecter</h1>
+            <p class="text-medium-emphasis text-center">Saisissez vos coordonnées pour commencer</p>
 
             <v-form @submit.prevent="loginUser" class="mt-7">
               <div class="mt-1">

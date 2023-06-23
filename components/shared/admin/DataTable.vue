@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between">
-      <h2>{{ props.titleSection }}</h2>
+    <div class="d-flex justify-space-between pa-12">
+      <h2 class="text-slate">{{ props.titleSection }}</h2>
+   
       <shared-button
         btn-class="btn-primary"
         :label="entityToCrud.formTitle"
@@ -9,7 +10,7 @@
         @onClick="isOpenDrawer = !isOpenDrawer"
       />
     </div>
-
+    <v-divider color="primary" ></v-divider>
     <v-data-table
       :headers="props.headers"
       :items="props.data"

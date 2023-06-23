@@ -4,6 +4,7 @@
     class="gradient primary"
     :class="btnClass"
     :type="type"
+    :width="width"
     :disabled="isDisabled"
     @click="onClick"
   >
@@ -22,6 +23,10 @@
 export default {
   props: {
     label: {
+      type: String,
+      default: '',
+    },
+    width:{
       type: String,
       default: '',
     },

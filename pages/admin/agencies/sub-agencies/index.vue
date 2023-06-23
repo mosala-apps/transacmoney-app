@@ -1,6 +1,6 @@
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div class="pa-12" v-if="!error && data && data.length> 0">
+    <div v-if="!error && data && data.length> 0">
       <shared-admin-data-table 
        :data="data"
        :headers="headers"

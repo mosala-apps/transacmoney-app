@@ -1,20 +1,17 @@
 <template>
-    <v-app-bar flat color="primary">
-      <v-container class="fill-height d-flex align-center">
-        <v-btn 
-        v-for="(item, index) in adminMenus" 
-        :key="index" variant="text"
-        @click="$router.push(item.to)"
-        >
-          {{ item.name }}
-        </v-btn>
+  <v-app-bar  elevation="0" style="z-index:2" flat>
+    <v-container class="fill-height d-flex align-center">
+      <v-list-item v-for="(item, index) in adminMenus" :key="index" :to="item.to" color="primary" rounded="lg">
+        <v-list-item-title> {{ item.name }} </v-list-item-title>
+      </v-list-item>
+      <v-spacer></v-spacer>
 
-        <v-spacer></v-spacer>
-
-        <v-responsive max-width="260"> </v-responsive>
-      </v-container>
-      <v-avatar class="me-10 ms-4" color="primary" size="32"></v-avatar>
-    </v-app-bar>
+      <v-responsive max-width="200"> </v-responsive>
+    </v-container>
+    <div class="pa-12">
+    <admin-menu-profile/>
+    </div>
+  </v-app-bar>
 </template>
 
 <script lang="ts" setup>
@@ -39,13 +36,6 @@ const adminMenus: AdminMenusType[] = reactive<AdminMenusType[]>([
     to: "/admin/matching",
     icon: "fas fa-dashboard",
     isSubMenus: true,
-    subMenus: [
-      {
-        name: "Transaction",
-        to: "/admin/matching/dev",
-        icon: "fas fa-dashboard",
-      },
-    ],
   },
   {
     name: "Utilisateurs",
@@ -55,7 +45,7 @@ const adminMenus: AdminMenusType[] = reactive<AdminMenusType[]>([
   },
   {
     name: "Transaction",
-    to: "/admin/users",
+    to: "/admin/transactions",
     icon: "fa-solid fa-user",
     isSubMenus: false,
   },

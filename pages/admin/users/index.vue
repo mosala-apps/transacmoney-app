@@ -1,6 +1,6 @@
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div class="pa-12">
+    <div>
       <shared-admin-data-table
         :data="users"
         :headers="headers"

@@ -1,7 +1,8 @@
 <template>
-  <v-navigation-drawer v-model="isOpen" temporary location="right" width="500">
+  <v-navigation-drawer v-model="isOpen" temporary location="right" width="500" flat  style="top: 0; height: 100%;" >
+    <v-divider color="primary"></v-divider>
     <h4 class="ma-6 text-center text-uppercase">{{ entityToCrud.formTitle }}</h4>
-    <v-divider></v-divider>
+    <v-divider color="primary"></v-divider>
     <v-form
       v-model="isValid"
       ref="Form"
@@ -55,6 +56,7 @@
         :label="entityToCrud.btnTitle"
         class="mb-2"
         type="submit"
+        width="500"
       />
     </v-form>
   </v-navigation-drawer>
