@@ -4,7 +4,10 @@
       <v-list-item-avatar class="cursor-pointer d-flex justify-space-between  align-center grandiant primary" v-bind="props">
         <span class="mr-4">Bonjour {{ user.username }}</span>
         <v-avatar color="info">
-          <v-icon icon="mdi-account-circle"></v-icon>
+        <v-img
+          alt="Avatar"
+          src="/images/profile.png"
+        ></v-img>
         </v-avatar>
       </v-list-item-avatar>
     </template>

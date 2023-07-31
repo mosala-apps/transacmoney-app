@@ -46,14 +46,14 @@
           </div>
         </v-form>
         <p class="text-body-2 mt-10">
-          <NuxtLink to="/reset-password" class="font-weight-bold text-primary"
+          <NuxtLink to="/auth/reset-password" class="font-weight-bold text-primary"
             >Mot de passe oublié?</NuxtLink
           >
         </p>
         <p class="text-body-2 mt-4">
           <span
             >Vous n'avez pas de compte ?
-            <NuxtLink to="/signup" class="font-weight-bold text-primary"
+            <NuxtLink to="/auth/signup" class="font-weight-bold text-primary"
               >Inscrivez-vous</NuxtLink
             ></span
           >
