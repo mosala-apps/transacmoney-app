@@ -1,8 +1,8 @@
 <template>
   <v-menu transition="slide-x-transition">
     <template #activator="{ props }">
-      <v-list-item-avatar class="cursor-pointer d-flex gap-2 grandiant primary" v-bind="props">
-        <span>Bonjour {{ user.username }}</span>
+      <v-list-item-avatar class="cursor-pointer d-flex justify-space-between  align-center grandiant primary" v-bind="props">
+        <span class="mr-4">Bonjour {{ user.username }}</span>
         <v-avatar color="info">
           <v-icon icon="mdi-account-circle"></v-icon>
         </v-avatar>
