@@ -3,13 +3,18 @@
 import { FormType } from '~/types/form.type';
 import { IEntityCrud } from '~/types/user.interface';
 import {API_URL} from '~/config/ApiURL'
+import { useACLRole } from '~/composables/aclRole';
+import { useAgencyStore } from '~/store/agencies';
 let  reload = ref(false);
 const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`,{
   watch:[reload]
 })
+const { agencies, getAllAgencies} = useAgencyStore()
 const validate = useFormRules();
+
 definePageMeta({
   layout: "admin",
+  middleware:'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
   name: "Agency",

@@ -1,6 +1,9 @@
 <template>
   <v-app id="inspire">
-    <adminNavBar />
-   <slot/>
+    <AdminSideBar>
+       <slot/>
+    </AdminSideBar>
   </v-app>
 </template>
+<script setup lang="ts">
+</script>

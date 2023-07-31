@@ -1,6 +1,6 @@
 <template>
      <v-main class="bg-slate" v-bind="props"  elevation="0" >
-      <v-container>
+      <v-container  v-if="!isDashboard">
         <v-row>
           <v-col cols="2">
             <v-sheet rounded="lg" elevation="0">
@@ -30,13 +30,21 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-container  v-else>
+        <v-row>
+          <v-col>
+            <slot/>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
 </template>
 
 <script lang="ts" setup>
 
 type AdminContainerProps={
-  subMenus: Array<string>
+  subMenus: Array<string>,
+  isDashboard: false,
 }
 const props = defineProps<AdminContainerProps>()
 </script>

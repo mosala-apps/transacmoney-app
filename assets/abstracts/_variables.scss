@@ -1,0 +1,25 @@
+
+@import './brackpoint';
+
+$primary-color:rgba(67, 56, 202, 1);
+$secondary-color:rgb(128, 130, 248);
+$secondary-light-color:#ffd1021c;
+$white-color:#ffff;
+$dark-color:#1f2f3b; 
+$dark-color:#10495C;
+$dark-light-color:#1f2f3bc4;
+$green-color:#198754;
+$white-light-color:#f8f7f7;
+$danger-color:#DC3545;
+
+
+$font-black: 'Montserrat Black';
+$font-bold: 'Montserrat Bold';
+$font-heavy: 'Montserrat Italic';
+$font-regular: 'Montserrat Regular';
+$font-light: 'Montserrat Light';
+
+$containerGutter: 2rem;
+$containerInternalWidth: 74.5rem;
+$containerMaxWidth: $containerInternalWidth + (2 * $containerGutter);
+

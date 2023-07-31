@@ -27,6 +27,7 @@ const { data, error, execute, refresh } = await useFetch(`${API_URL}/subAgency`,
 })
 definePageMeta({
   layout: "admin",
+  middleware:'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
   name: "subAgency",

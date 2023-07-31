@@ -13,12 +13,12 @@ export default defineNuxtConfig({
   css: ["@/assets/main.scss"],
   // enable takeover mode
   typescript: { shim: false },
-  build: { transpile: ["vuetify"] },
+  build: { transpile: ["vuetify","vue-toastification"] },
   modules: [
     "@kevinmarrec/nuxt-pwa",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
-    "@sidebase/nuxt-auth",
+    // "@sidebase/nuxt-auth",
     "@nuxtjs/color-mode",
     async (options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) =>
@@ -34,26 +34,29 @@ export default defineNuxtConfig({
       ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
     ],
   },
-  auth: {
-    baseURL:'http://localhost:4500/api',
-    globalAppMiddleware: true,
-    provider: {
-      pages:{
-        login:'auth/signin',
-      },
-      type: "local",
-      token:{
-          type: 'Bearer',
-          headerName:'access_token'
-      },
-      endpoints: {
-        signIn: { path: "/auth/login", method: "post" },
-        signOut: { path: "/logout", method: "post" },
-        signUp: { path: "/auth/register", method: "post" },
-      },
-    },
-  },
-  app: {
+  // auth: {
+  //   baseURL:'http://localhost:4500/api',
+  //   globalAppMiddleware: true,
+  //   provider: { console.log("je suis sur le middlware auth:")
+  //     pages:{
+  //       login:'auth/signin',
+  //     },
+  //     type: "local",
+  //     token: {
+  //       signInResponseTokenPointer: '/token',
+  //       type: 'Bearer',
+  //       headerName: 'Authorization',
+  //       maxAgeInSeconds: 30 * 60
+  //     },
+  //     sessionDataType: { id: 'string | number' },
+  //     endpoints: {
+  //       signIn: { path: "/auth/login", method: "post" },
+  //       signOut: { path: "/logout", method: "post" },
+  //       signUp: { path: "/auth/register", method: "post" },
+  //     },
+  //   },
+  // },
+  app: {  
     head: {
       title: "TransacMoney",
       titleTemplate: "%s | TransacMoney",
@@ -121,7 +124,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-
   pwa: {
     meta: {
       name: shortTitle,

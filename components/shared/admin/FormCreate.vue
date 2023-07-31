@@ -50,6 +50,15 @@
           item-title="name"
           variant="outlined"
         ></v-autocomplete>
+        <v-autocomplete
+          v-model="completedFormField.operationTypeId"
+          chips
+          label="Type de l'operation"
+          :items="operations"
+          item-value="id"
+          item-title="name"
+          variant="outlined"
+        ></v-autocomplete>
       </div>
       <shared-button
         btn-class="btn-primary"
@@ -68,6 +77,18 @@ import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
 const { data: agencies } = await useFetch(`${API_URL}/agency`);
 const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+const operations = reactive([
+  {
+    id:1,
+    name:'Depot'
+  },
+  {
+    id:2,
+    name:'Retrait'
+  },
+  
+  
+])
 const roles = useRoles();
 type Props = {
   isOpenDrawer: boolean;

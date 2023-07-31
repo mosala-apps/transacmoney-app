@@ -1,0 +1,109 @@
+$family: "Inter var", "Inter", apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+  Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+@use "vuetify" with (
+  $body-font-family: $family
+);
+:root {
+  font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: "Inter var", sans-serif;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+/* Works on Firefox */
+* {
+  scrollbar-width: 8px;
+  scrollbar-color: $white-color $secondary-color;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px !important;
+  background-color: $secondary-color;
+}
+
+
+body {
+  // font-size: 62.8%;
+  background-color: #f6f6f9 !important;
+  overflow-x: hidden;
+}
+html {
+  scroll-behavior: smooth !important;
+}
+.mobile-padding {
+  @media screen and (max-width: 768px) {
+    padding-top: 5rem !important;
+    margin-top: 4rem;
+  }
+  @media screen and (max-width: 568px) {
+    padding-top: 5rem !important;
+    margin-top: 3rem;
+  }
+}
+a {
+  text-decoration: none;
+}
+a {
+  transition: all 0.3s ease-in-out;
+}
+a:hover {
+  color: $secondary-color;
+}
+.btn-primary {
+  color: $white-color;
+  transition: 0.3s ease;
+  font-family: $font-bold;
+  &:hover {
+    background-color: #fff !important;
+    color: $secondary-color;
+  }
+}
+button {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+@for $i from 1 to 100 {
+  .p-#{$i} {
+    padding: $i * 1rem;
+  }
+
+  .pt-#{$i} {
+    padding-top: $i * 1rem;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i * 1rem;
+  }
+  .px-#{$i} {
+    padding: 0 $i * 1rem;
+  }
+  .py-#{$i} {
+    padding: $i * 1rem 0;
+  }
+}
+.bg-slate-50{
+  background-color: rgb(248 250 252);
+}
+.bg-slate{
+  background-color: rgb(239 246 255);
+}
+.bg-slate-100{
+  background-color: rgb(241 245 249);
+}
+.bg-blue-50{
+  background-color: rgb(239 246 255);
+}

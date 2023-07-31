@@ -13,42 +13,51 @@
   </sharedAdminContainer>
 </template>
 <script lang="ts" setup>
-import { FormType } from '~/types/form.type';
-import { IEntityCrud } from '~/types/user.interface';
-import {API_URL} from '~/config/ApiURL'
+import { FormType } from "~/types/form.type";
+import { IEntityCrud } from "~/types/user.interface";
+import { API_URL } from "~/config/ApiURL";
 
-let  reload = ref(false);
-const { data:users, error, execute, refresh } = await useFetch(`${API_URL}/users`,{
-  watch:[reload]
-})
-const validate = useFormRules()
+definePageMeta({
+  layout: "admin",
+  middleware:'admin'
+});
+let reload = ref(false);
+const {
+  data: users,
+  error,
+  execute,
+  refresh,
+} = await useFetch(`${API_URL}/users`, {
+  watch: [reload],
+});
+const validate = useFormRules();
 
 let entityToCrud: IEntityCrud = reactive({
   name: "user",
   formTitle: "Créer un utilisateur",
   btnTitle: "Enregistrer",
-})
-const formFields:FormType[] = reactive<FormType[]>([
+});
+const formFields: FormType[] = reactive<FormType[]>([
   {
     name: "username",
     type: "text",
     id: "name",
     label: "Nom de l'utilisateur",
-    rules: [validate.required]
+    rules: [validate.required],
   },
   {
     name: "email",
     type: "select",
     id: "email",
     label: "Email",
-    rules: [validate.required, validate.email]
+    rules: [validate.required, validate.email],
   },
   {
     name: "password",
     type: "text",
     id: "location",
     label: "Mot de passe",
-    rules: [validate.required]
+    rules: [validate.required],
   },
 ]);
 const subMenus = reactive([
@@ -60,9 +69,7 @@ const subMenus = reactive([
     path: "/admin/agencies/sub-agencies",
   },
 ]);
-definePageMeta({
-  layout: "admin",
-});
+
 const headers = reactive([
   {
     title: "Nom",
@@ -80,7 +87,70 @@ const headers = reactive([
   { title: "Adresse", align: "end", key: "address" },
   { title: "actions", align: "end", key: "actions" },
 ]);
-const handleSubmit =(value:any)=>{
+const handleSubmit = (value: any) => {
   reload.value = true;
-}
+};
+
 </script>
+<style lang="scss">
+@import '@/assets/main';
+.event-data-table__action {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: 1.5rem;
+}
+.card-kpi{
+  background-color: $white-color;
+  padding: 1rem;
+  border-radius:8px;
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+  transition: transform .3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  height: 200px;
+  &:hover{
+    transform: scale(1.09);
+  }
+}
+.participants-link {
+  &:hover {
+    text-decoration: underline !important;
+    // color: $secondary-color;
+  }
+}
+
+.statistic-section {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.count-title {
+  font-size: 50px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.stats-text {
+  font-size: 15px;
+  margin-top: 15px;
+  margin-bottom: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.stats-line-black {
+  margin: 12px auto 0;
+  width: 55px;
+  height: 2px;
+}
+.stats-icon {
+  font-size: 35px;
+  margin: 0 auto;
+  float: none;
+  display: table;
+  // color: $secondary-color;
+}
+</style>

@@ -8,7 +8,8 @@ export interface AdminMenusType {
     name: string
     to: string
     icon: string
-    isSubMenus: boolean
+    isSubMenus: boolean,
+    canView?: boolean,
     subMenus?: SubMenusType[]
 }
 

@@ -1,30 +1,26 @@
 <template>
-  <v-menu rounded="custom" offset-y>
-    <template #activator="{ attrs, on }">
-      <v-list-item-avatar class="cursor-pointer" v-bind="attrs" v-on="on">
-        <v-avatar>
-        <v-img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John"></v-img>
-      </v-avatar>
+  <v-menu transition="slide-x-transition">
+    <template #activator="{ props }">
+      <v-list-item-avatar class="cursor-pointer d-flex gap-2 grandiant primary" v-bind="props">
+        <span>Bonjour {{ user.username }}</span>
+        <v-avatar color="info">
+          <v-icon icon="mdi-account-circle"></v-icon>
+        </v-avatar>
       </v-list-item-avatar>
     </template>
-
     <v-list>
       <v-list-item v-for="(item, i) in menus" :key="i" link :to="item.to">
-        <v-list-item-action>
-          <v-icon color="primary">{{ item.icon }}</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
-      <div class="profile-menu__auth-action">
-       Deconnexion
-      </div>
+      <v-btn @click="handleLogout">Deconnexion</v-btn>
     </v-list>
   </v-menu>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from "~/store/auth";
+
+const { user, isAuthenticated, logout } = useAuthStore();
 
 const menus = [
   {
@@ -33,6 +29,10 @@ const menus = [
     to: "/",
   },
 ];
+const handleLogout = () => {
+  logout();
+  navigateTo('/auth/signin')
+};
 </script>
 <style lang="scss" scoped>
 .profile-menu__auth-action {
