@@ -19,11 +19,12 @@
           color="white"
           class="flex"
         >
-          <v-list-item-action>
+         
+          <v-list-item-content class="d-flex gap-6">
+            <v-list-item-action>
             <v-icon color="white">{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
+            <v-list-item-title class="ml-3">{{ item.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -44,46 +45,50 @@ const { canAgenciesView, canAdminsView } = useACLRole();
 const links = reactive<string[]>(["Dashboard", "Messages", "Profile", "Updates"]);
 const title = ref<string>("Transacmoney");
 const miniVariant = ref<boolean>(false);
-const right = ref<boolean>(false);
-const rightDrawer = ref<boolean>(false);
 const clipped = ref<boolean>(false);
-const drawer = ref<boolean>(false);
-const fixed = ref<boolean>(false);
+const drawer = ref<boolean>(true);
 const items: AdminMenusType[] = reactive<AdminMenusType[]>([
   {
     name: "Dashboard",
     to: "/admin/",
-    icon: "mdi-apps",
+    icon: "mdi-view-dashboard",
     isSubMenus: false,
     canView: true,
   },
   {
     name: "Agences",
     to: "/admin/agencies",
-    icon: "mdi-apps",
+    icon: "mdi-home",
     isSubMenus: false,
     canView: canAdminsView.value,
   },
   {
     name: "Recharge",
     to: "/admin/matching",
-    icon: "mdi-apps",
+    icon: "mdi-currency-usd",
     isSubMenus: true,
     canView: canAdminsView.value,
   },
   {
     name: "Utilisateurs",
     to: "/admin/users",
-    icon: "mdi-apps",
+    icon: "mdi-account-group",
     isSubMenus: false,
     canView: canAdminsView.value,
   },
   {
     name: "Transaction",
     to: "/admin/transactions",
-    icon: "mdi-apps",
+    icon: "mdi-bank-transfer",
     isSubMenus: false,
     canView: canAgenciesView.value,
+  },
+  {
+    name: "Parametres",
+    to: "/admin/settings",
+    icon: "mdi-cog",
+    isSubMenus: false,
+    canView: canAdminsView.value,
   },
 ]);
 </script>

@@ -35,6 +35,7 @@
           :entityToCrud="entityToCrud"
           @handleClose="close"
           @handleSubmit="handleSubmit"
+          style='z-index:20001;'
         />
       </template>
     </v-data-table>
