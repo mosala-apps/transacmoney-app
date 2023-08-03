@@ -2,7 +2,7 @@
      <v-main class="bg-slate" v-bind="props"  elevation="0" >
       <v-container  v-if="!isDashboard">
         <v-row>
-          <v-col cols="2">
+          <v-col cols="2"  v-if="showMenus">
             <v-sheet rounded="lg" elevation="0">
               <v-list rounded="sm">
                 <v-list-item 
@@ -43,8 +43,9 @@
 <script lang="ts" setup>
 
 type AdminContainerProps={
-  subMenus: Array<string>,
-  isDashboard: false,
+  subMenus?: Array<string>,
+  isDashboard?: false,
+  showMenus?: true
 }
 const props = defineProps<AdminContainerProps>()
 </script>

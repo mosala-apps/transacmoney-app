@@ -3,5 +3,6 @@ export type FormType={
     type: string,
     id: string,
     label: string,
-    rules?: any[]
+    rules?: any[],
+    values?: any[]
 }

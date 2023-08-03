@@ -29,7 +29,7 @@
       @pagination="handlePagination"
     >
       <template #top>
-        <shared-admin-form-create
+        <shared-admin-transactions-form-create
           :isOpenDrawer="isOpenDrawer"
           :formFields="formFields"
           :entityToCrud="entityToCrud"

@@ -5,10 +5,14 @@ import { API_URL } from "~/config/ApiURL";
 import { useACLRole } from "~/composables/aclRole";
 import { useAgencyStore } from "~/store/agencies";
 let reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`, {
+const { data:agencies, error, execute, refresh } = await useFetch(`${API_URL}/agency`, {
   watch: [reload],
 });
-const { agencies, getAllAgencies } = useAgencyStore();
+const {
+  data: users,
+} = await useFetch(`${API_URL}/users`);
+
+// const { agencies, getAllAgencies } = useAgencyStore();
 const validate = useFormRules();
 
 definePageMeta({
@@ -21,36 +25,71 @@ let entityToCrud: IEntityCrud = reactive({
 });
 const formFields: FormType[] = reactive<FormType[]>([
   {
-    name: "Libelle",
+    name: "name",
     type: "text",
     id: "name",
-    label: "Nom de l'agence",
+    label: "Libelle",
     rules: [validate.required],
   },
  
   {
-    name: "Type Operation",
-    type: "text",
+    name: "operationTypeId",
+    type: "select",
     id: "phone",
-    label: "Type Operation",
+    label: "Types Operation",
+    itemValue:'id',
+    itemTitle:'name',
     rules: [validate.required],
+    values: [
+      {
+        id: 'DEPOSIT',
+        name: "Depot",
+      },
+      {
+        id: 'TRANSFER_TO',
+        name: "Transfert",
+      },
+    ],
   },
   {
-    name: "address",
-    type: "text",
-    id: "location",
-    label: "Lieu",
+    name: "agencyId",
+    type: "select",
+    id: "agencyId",
+    label: "Agence Beneficiaire",
+    itemValue:'id',
+    itemTitle:'name',
     rules: [validate.required],
+    values: agencies,
   },
   {
-    name: "location",
-    type: "text",
-    id: "location",
-    label: "Ville",
+    name: "recipients",
+    type: "select",
+    id: "phone",
+    label: "Beneficiaire",
+    itemValue:'id',
+    itemTitle:'username',
     rules: [validate.required],
+    values: users,
   },
-]);
+  {
+    name: "expeditor",
+    type: "select",
+    id: "phone",
+    label: "Expediteur",
+    itemValue:'id',
+    itemTitle:'username',
+    rules: [validate.required],
+    values: users,
+  },
+  {
+    name: "amount",
+    type: "text",
+    id: "amount",
+    label: "Montant",
+    rules: [validate.required, validate.numbers],
+  },
 
+]);
 
 const headers = reactive([
   {
@@ -75,28 +114,33 @@ const handleSubmit = (value: any) => {
 <template>
   <sharedAdminContainer :showSubMenus="false">
     <div>
-      <shared-admin-data-table
+      <shared-admin-transactions-data-table
+        :showMenus="false"
         :data="[
           {
-            type:'Depot',
-            experitor:'rkota',recepient:'Ngoy',
-            operationDate:'28/06/2023'
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/06/2023',
           },
           {
-            type:'Depot',
-            experitor:'rkota',recepient:'Ngoy',
-            operationDate:'28/07/2023'
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/07/2023',
           },
           {
-            type:'Retrait',
-            experitor:'rkota',recepient:'Ngoy',
-            operationDate:'30/06/2023'
+            type: 'Retrait',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '30/06/2023',
           },
           {
-            type:'Depot',
-            experitor:'rkota',recepient:'Ngoy',
-            operationDate:'28/36/2023'
-          }
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/36/2023',
+          },
         ]"
         :headers="headers"
         titleSection="Liste des operations"

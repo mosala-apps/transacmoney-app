@@ -38,7 +38,7 @@
       </VCol>
       <VCol class="hidden-md-and-down fill-height" md="6" lg="7">
         <VImg
-          src="https://wallpaper.dog/large/5557744.jpg"
+          src="/images/Money_Cash.jpg"
           cover
           class="h-100 rounded-xl d-flex align-center justify-center"
         >

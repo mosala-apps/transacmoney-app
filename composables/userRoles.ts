@@ -16,5 +16,13 @@ export const useRoles = () => {
       name: "SOUS-AGENT",
       slug: "subAgency",
     },
+    {
+      name: "EXPEDITEUR",
+      slug: "expeditor",
+    },
+    {
+      name: "BENEFICIAIRE",
+      slug: "recipients",
+    },
   ];
 };
