@@ -19,39 +19,17 @@
           :name="form.name"
           :type="form.type"
         />
+       
       </div>
-      <div v-if="entityToCrud.name === 'user'">
-        <v-autocomplete
-          v-model="completedFormField.role"
-          chips
-          label="Roles"
-          :items="roles"
-          item-value="slug"
-          item-title="name"
-          variant="outlined"
-        ></v-autocomplete>
-        <v-autocomplete
-         v-show="completedFormField.role=== 'agency'"
-          v-model="completedFormField.agencyId"
-          chips
-          label="Selectionner l'agence"
-          :items="agencies"
+      <v-autocomplete
+          v-model="completedFormField.cityId"
+          
+          label="Ville"
+          :items="citiesData"
           item-value="id"
           item-title="name"
           variant="outlined"
         ></v-autocomplete>
-        <!-- <v-autocomplete
-          v-show="completedFormField.role=== 'subAgency'"
-          v-model="completedFormField.subAgencyId"
-          chips
-          label="Selectionner la sous agence"
-          :items="subAgencies"
-          item-value="id"
-          item-title="name"
-          variant="outlined"
-        ></v-autocomplete>
-        -->
-      </div>
       <shared-button
         btn-class="btn-primary"
         :label="entityToCrud.btnTitle"
@@ -67,8 +45,10 @@
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
-const { data: agencies } = await useFetch(`${API_URL}/agency`);
-const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+let  reload = ref(false);
+const { data:citiesData, error, execute, refresh } = await useFetch(`${API_URL}/cities`,{
+  watch:[reload]
+})
 const operations = reactive([
   {
     id:1,
@@ -113,7 +93,7 @@ watch(isOpen, (valueselection) => {
 const onSubmit = async () => {
   method.value = `store`;
   isOpen.value = false;
-  let uri = props.entityToCrud.name === 'user'?'users': props.entityToCrud.name
+  let uri =props.entityToCrud.name
   await $fetch(`${API_URL}/${uri}/${method.value}`, {
     method: "POST",
     body: { ...completedFormField },

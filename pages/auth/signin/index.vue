@@ -10,11 +10,11 @@
         <h1 class="text-center">Se Connecter</h1>
         <p class="text-medium-emphasis text-center">Saisissez vos coordonnées pour commencer</p>
 
-        <v-form @submit.prevent="loginUser" class="mt-7">
+        <v-form @submit.prevent="loginUser" class="mt-7" type="POST">
           <div class="mt-1">
-            <label class="label text-grey-darken-2" for="email">Email</label>
+            <label class="label text-grey-darken-2" for="email">Username ou Email ou Téléphone</label>
             <VTextField
-              :rules="[validate.required, validate.email]"
+              :rules="[validate.required, validate.validateIdentifier]"
               v-model="form.identifier"
               prepend-inner-icon="fluent:mail-24-regular"
               id="email"

@@ -18,6 +18,7 @@ export const useACLRole =()=>{
         hashExpeditorRole,
         hashReceiverRole,
         canAdminsView,
-        canAgenciesView
+        canAgenciesView,
+        canSubAgencyView: hashSubAgencyRole,
     }
 }

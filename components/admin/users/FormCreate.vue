@@ -20,7 +20,7 @@
           :type="form.type"
         />
       </div>
-      <div v-if="entityToCrud.name === 'user'">
+      <div v-if="entityToCrud.name === 'users'">
         <v-autocomplete
           v-model="completedFormField.role"
           chips
@@ -31,7 +31,7 @@
           variant="outlined"
         ></v-autocomplete>
         <v-autocomplete
-         v-show="completedFormField.role=== 'agency'"
+          v-show="completedFormField.role=== 'agency'"
           v-model="completedFormField.agencyId"
           chips
           label="Selectionner l'agence"
@@ -67,8 +67,8 @@
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
-const { data: agencies } = await useFetch(`${API_URL}/agency`);
-const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+const { data: agencies } = await useFetch(`${API_URL}/agencies`);
+// const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
 const operations = reactive([
   {
     id:1,

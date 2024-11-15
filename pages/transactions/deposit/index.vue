@@ -17,11 +17,11 @@ const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
-  middleware:'admin'
+ // middleware:'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
-  name: "agencies",
-  formTitle: "Créer une agence",
+  name: "deposit",
+  formTitle: "Créer un depot",
   btnTitle: "Enregistrer",
 })
 const formFields:FormType[] = reactive<FormType[]>([
@@ -104,10 +104,10 @@ const handleSubmit =(value:any)=>{
 <template>
   <sharedAdminContainer :subMenus="subMenus">
     <div>
-      <admin-agencies-data-table
+      <transactions-deposit-data-table
         :data="data"
         :headers="headers"
-        titleSection="Liste des Agences"
+        titleSection="Liste des depots"
         :entityToCrud="entityToCrud"
         :formFields="formFields"
         @handleSubmit="handleSubmit"

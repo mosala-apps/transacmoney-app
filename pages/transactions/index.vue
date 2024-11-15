@@ -4,15 +4,9 @@ import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
 import { useACLRole } from "~/composables/aclRole";
 import { useAgencyStore } from "~/store/agencies";
-import { useAuthStore } from "~/store/auth";
-const {user} = useAuthStore()
-const token = useCookie('access_token');
 let reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/transactions`, {
+const { data:agencies, error, execute, refresh } = await useFetch(`${API_URL}/agency`, {
   watch: [reload],
-  headers: {
-      Authorization: `Bearer ${token.value}`
-  }
 });
 const {
   data: users,
@@ -29,7 +23,7 @@ let entityToCrud: IEntityCrud = reactive({
   formTitle: "Créer une nouvelle operation",
   btnTitle: "Enregistrer",
 });
-const formFields: FormType[] = reactive<FormType[]|any[]>([
+const formFields: FormType[] = reactive<FormType[]>([
   {
     name: "name",
     type: "text",
@@ -65,7 +59,7 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     itemValue:'id',
     itemTitle:'name',
     rules: [validate.required],
-    values: [],
+    values: agencies,
   },
   {
     name: "recipients",
@@ -99,19 +93,16 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
 
 const headers = reactive([
   {
-    title: "Montant",
+    title: "Nom",
     align: "start",
     sortable: false,
-    key: "amount",
+    key: "name",
   },
-  { title: "Devise", align: "end", key: "currency.name" },
   { title: "type", align: "end", key: "type" },
-  { title: "Expediteur", align: "end", key: "sender.name" },
-  { title: "Beneficiaire", align: "end", key: "receiver.name" },
-  { title: "Origine", align: "end", key: "originCity.name" },
-  { title: "Destination", align: "end", key: "destinationCity.name" },
+  { title: "Expediteur", align: "end", key: "expeditor" },
+  { title: "Beneficiaire", align: "end", key: "recipient" },
   { title: "Statut", align: "end", key: "status" },
-  { title: "Date operation", align: "end", key: "updatedAt" },
+  { title: "Date operation", align: "end", key: "operationDate" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 
@@ -123,16 +114,40 @@ const handleSubmit = (value: any) => {
 <template>
   <sharedAdminContainer :showSubMenus="false">
     <div>
-     <shared-admin-transactions-data-table
+      <shared-admin-transactions-data-table
         :showMenus="false"
-        :data="data"
+        :data="[
+          {
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/06/2023',
+          },
+          {
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/07/2023',
+          },
+          {
+            type: 'Retrait',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '30/06/2023',
+          },
+          {
+            type: 'Depot',
+            experitor: 'rkota',
+            recepient: 'Ngoy',
+            operationDate: '28/36/2023',
+          },
+        ]"
         :headers="headers"
         titleSection="Liste des operations"
         :entityToCrud="entityToCrud"
         :formFields="formFields"
         @handleSubmit="handleSubmit"
       />
-       
     </div>
   </sharedAdminContainer>
 </template>

@@ -4,7 +4,7 @@
       <h2 class="text-slate">{{ props.titleSection }}</h2>
 
       <shared-button
-        v-show="canAdminsView"
+        v-show="canAgenciesView || canSubAgencyView"
         btn-class="btn-primary"
         :label="entityToCrud.formTitle"
         class="mb-2"
@@ -29,7 +29,7 @@
       @pagination="handlePagination"
     >
       <template #top>
-        <shared-admin-transactions-form-create
+        <admin-agencies-form-create
           :isOpenDrawer="isOpenDrawer"
           :formFields="formFields"
           :entityToCrud="entityToCrud"
@@ -37,24 +37,6 @@
           @handleSubmit="handleSubmit"
           style='z-index:20001;'
         />
-      </template>
-      <template #[`item.type`]="{ item }">
-        <v-chip size="small" color="green">
-          <span class="text-blue-500"> {{ getFormattedTransactionType(item.selectable) }}</span>
-        </v-chip>
-      </template>
-      <template #[`item.updatedAt`]="{ item }">
-        <v-chip size="small" color="green">
-          <span class="text-blue-500"> {{ getFormattedDate(item.selectable?.updatedAt) }}</span>
-        </v-chip>
-      </template>
-      <template #[`item.status`]="{ item }">
-        <v-chip size="small" color="green">
-          <span class="text-blue-500"> {{ getFormattedTransactionStatus(item.selectable?.status) }}</span>
-        </v-chip>
-      </template>
-      <template #[`item.actions`]="{ item }">
-        <v-btn variant="outlined" color="red">Rejecter</v-btn>
       </template>
     </v-data-table>
   </div>
@@ -65,10 +47,9 @@ import type { Header, Item } from "vue3-easy-data-table";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 import { useACLRole } from "~/composables/aclRole";
 import { FormType } from "~/types/form.type";
-import { StatusTransaction, TransactionEnum } from "~/types/transaction.enum";
 import { IEntityCrud } from "~/types/user.interface";
 const { pagination, rowsPerPageItems } = usePagination();
-const { canAdminsView } = useACLRole();
+const { canAgenciesView ,canSubAgencyView} = useACLRole();
 export type Props = {
   data: any[];
   headers: any[];
@@ -89,25 +70,6 @@ let searchTerm = ref("");
 const handleSubmit = (value: any) => {
   emit("handleSubmit", value);
 };
-const getFormattedTransactionStatus = (status: string) => {
-  if (status === StatusTransaction.IN_PROGRESS ) return 'En cours'
-  else if (status === StatusTransaction.ACCEPTED ) return 'Traité'
-  else if (status === StatusTransaction.REJECTED ) return 'Rejetée'
-}
-const getFormattedTransactionType = ({type, status}:any) => {
- 
-  if (type === TransactionEnum.TRANSFER_TO && status === StatusTransaction.ACCEPTED  ) return 'Retrait'
-  else if (type === TransactionEnum.TRANSFER_TO && status === StatusTransaction.IN_PROGRESS  ) return 'Dépot'
-  return 'Transfert'
-}
-
-const getFormattedDate = ({date}:any) => {
-  // format date 
-  if (date ) {
-    return new Date(date).toLocaleString();
-  }
-  return "";
-}
 const handlePagination = () => {};
 const close = (value: boolean) => {
   isOpenDrawer.value = value;

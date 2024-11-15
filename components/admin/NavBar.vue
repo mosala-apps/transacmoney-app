@@ -50,7 +50,7 @@ const adminMenus: AdminMenusType[] = reactive<AdminMenusType[]>([
     canView: canAdminsView.value,
   },
   {
-    name: "Utilisateurs",
+    name: "Utilisateursssss",
     to: "/admin/users",
     icon: "fa-solid fa-user",
     isSubMenus: false,

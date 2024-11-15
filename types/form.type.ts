@@ -5,4 +5,5 @@ export type FormType={
     label: string,
     rules?: any[],
     values?: any[]
+    itemValue?:any
 }

@@ -9,22 +9,23 @@
       class="admin-panel"
     >
       <v-list>
-        <v-toolbar-title class="admin-panel__title">{{ title }}</v-toolbar-title>
+        <v-toolbar-title class="admin-panel__title">{{ title }} </v-toolbar-title>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          v-show="item.canView"
           router
           exact
           color="white"
           class="flex"
         >
          
-          <v-list-item-content class="d-flex gap-6">
+          <v-list-item-content class="d-flex gap-6" >
             <v-list-item-action>
-            <v-icon color="white">{{ item.icon }}</v-icon>
+            <v-icon color="white" >{{ item.icon }}</v-icon>
           </v-list-item-action>
-            <v-list-item-title class="ml-3">{{ item.name }}</v-list-item-title>
+            <v-list-item-title class="ml-3" >{{ item.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -63,6 +64,13 @@ const items: AdminMenusType[] = reactive<AdminMenusType[]>([
     canView: canAdminsView.value,
   },
   {
+    name: "Sous-Agents",
+    to: "/admin/sub-agents",
+    icon: "mdi-account-group",
+    isSubMenus: false,
+    canView: canAdminsView.value,
+  },
+  {
     name: "Recharge",
     to: "/admin/matching",
     icon: "mdi-currency-usd",
@@ -77,8 +85,36 @@ const items: AdminMenusType[] = reactive<AdminMenusType[]>([
     canView: canAdminsView.value,
   },
   {
-    name: "Transaction",
+    name: "Transactions",
     to: "/admin/transactions",
+    icon: "mdi-bank-transfer",
+    isSubMenus: false,
+    canView: canAdminsView.value,
+  },
+  {
+    name: "Depots",
+    to: "/transactions/deposit",
+    icon: "mdi-bank-transfer",
+    isSubMenus: false,
+    canView: canAgenciesView.value,
+  },
+  {
+    name: "Retraits",
+    to: "/transactions/with-drawal",
+    icon: "mdi-bank-transfer",
+    isSubMenus: false,
+    canView: canAgenciesView.value,
+  },
+  {
+    name: "Mon Compte",
+    to: "/admin/agency/account",
+    icon: "mdi-bank-transfer",
+    isSubMenus: false,
+    canView: canAgenciesView.value,
+  },
+  {
+    name: "Bureau de change",
+    to: "/admin/settings/change-money",
     icon: "mdi-bank-transfer",
     isSubMenus: false,
     canView: canAgenciesView.value,

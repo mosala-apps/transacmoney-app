@@ -1,4 +1,3 @@
-
 <script lang="ts" setup>
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
@@ -6,11 +5,11 @@ import { API_URL } from "~/config/ApiURL";
 
 definePageMeta({
   layout: "admin",
-  middleware:'admin'
+  middleware: 'admin'
 });
-let  reload = ref(false);
-const { data, error, execute, refresh, pending } = await useFetch(`${API_URL}/users`,{
-  watch:[reload]
+let reload = ref(false);
+const { data, error, execute, refresh } = await useFetch(`${API_URL}/users`, {
+  watch: [reload]
 })
 
 const validate = useFormRules();
@@ -73,12 +72,6 @@ const headers = reactive([
     sortable: false,
     key: "email",
   },
-  {
-    title: "Telephone",
-    align: "start",
-    sortable: false,
-    key: "phone",
-  },
   { title: "Role", align: "center", key: "role" },
   { title: "actions", align: "end", key: "actions" },
 ]);
@@ -89,23 +82,15 @@ const handleSubmit = (value: any) => {
 </script>
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div  v-if="pending">
-      
-    </div>
-    <div v-else>
-      <admin-users-data-table
-        :data="data"
-        :headers="headers"
-        titleSection="Liste des utilisateurs"
-        :entityToCrud="entityToCrud"
-        :formFields="formFields"
-        @handleSubmit="handleSubmit"
-      />
+    <div>
+      <admin-users-data-table :data="data" :headers="headers" titleSection="Liste des utilisateurs"
+        :entityToCrud="entityToCrud" :formFields="formFields" @handleSubmit="handleSubmit" />
     </div>
   </sharedAdminContainer>
 </template>
 <style lang="scss">
 @import '@/assets/main';
+
 .event-data-table__action {
   width: 100%;
   display: flex;
@@ -113,17 +98,20 @@ const handleSubmit = (value: any) => {
   align-items: flex-end;
   margin-top: 1.5rem;
 }
-.card-kpi{
+
+.card-kpi {
   background-color: $white-color;
   padding: 1rem;
-  border-radius:8px;
-  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
   transition: transform .3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   height: 200px;
-  &:hover{
+
+  &:hover {
     transform: scale(1.09);
   }
 }
+
 .participants-link {
   &:hover {
     text-decoration: underline !important;
@@ -158,6 +146,7 @@ const handleSubmit = (value: any) => {
   width: 55px;
   height: 2px;
 }
+
 .stats-icon {
   font-size: 35px;
   margin: 0 auto;
