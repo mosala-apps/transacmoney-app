@@ -44,9 +44,9 @@
         </v-chip>
       </template>
       <template #[`item.updatedAt`]="{ item }">
-        <v-chip size="small" color="green">
+       
           <span class="text-blue-500"> {{ getFormattedDate(item.selectable?.updatedAt) }}</span>
-        </v-chip>
+        
       </template>
       <template #[`item.status`]="{ item }">
         <v-chip size="small" color="green">
@@ -61,7 +61,7 @@
 </template>
 <script setup lang="ts">
 type Headers = InstanceType<typeof VDataTable>["headers"];
-import type { Header, Item } from "vue3-easy-data-table";
+import {getDateFormatted}  from "@/utils/global"
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 import { useACLRole } from "~/composables/aclRole";
 import { FormType } from "~/types/form.type";
@@ -101,12 +101,8 @@ const getFormattedTransactionType = ({type, status}:any) => {
   return 'Transfert'
 }
 
-const getFormattedDate = ({date}:any) => {
-  // format date 
-  if (date ) {
-    return new Date(date).toLocaleString();
-  }
-  return "";
+const getFormattedDate = (date:string) => {
+  return getDateFormatted(date);
 }
 const handlePagination = () => {};
 const close = (value: boolean) => {
