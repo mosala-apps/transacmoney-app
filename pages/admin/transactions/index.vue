@@ -123,7 +123,7 @@ const handleSubmit = (value: any) => {
 <template>
   <sharedAdminContainer :showSubMenus="false">
     <div>
-     <shared-admin-transactions-data-table
+     <admin-transactions-data-table
         :showMenus="false"
         :data="data"
         :headers="headers"
