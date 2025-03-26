@@ -46,7 +46,7 @@ const formFields: FormType[] = reactive<FormType[]>([
         name: "Depot",
       },
       {
-        id: 'TRANSFER_TO',
+        id: 'WITHDRAWAL',
         name: "Transfert",
       },
     ],

@@ -1,6 +1,6 @@
 export enum TransactionEnum {
     DEPOSIT = 'DEPOSIT', // depot
-    TRANSFER_TO = 'TRANSFER_TO', // transfert
+    WITHDRAWAL = 'WITHDRAWAL', // retrait
   }
   
   export enum StatusTransaction {

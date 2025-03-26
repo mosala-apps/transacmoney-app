@@ -9,7 +9,8 @@
       class="admin-panel"
     >
       <v-list>
-        <v-toolbar-title class="admin-panel__title">{{ title }} </v-toolbar-title>
+        <v-toolbar-title class="admin-panel__title text-uppercase py-4 text-bold">{{ title }} </v-toolbar-title>
+        <v-divider class="pt-4"></v-divider>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -18,7 +19,7 @@
           router
           exact
           color="white"
-          class="flex"
+          class="flex "
         >
          
           <v-list-item-content class="d-flex gap-6" >
@@ -76,6 +77,13 @@ const items: AdminMenusType[] = reactive<AdminMenusType[]>([
     icon: "mdi-currency-usd",
     isSubMenus: true,
     canView: canAdminsView.value,
+  },
+  {
+    name: "Clients",
+    to: "/clients",
+    icon: "mdi-account-group",
+    isSubMenus: false,
+    canView: canAgenciesView.value,
   },
   {
     name: "Utilisateurs",

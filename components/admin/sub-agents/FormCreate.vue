@@ -20,7 +20,15 @@
           :type="form.type"
         />
       </div>
-      <div v-if="entityToCrud.name === 'user'">
+      <div v-if="entityToCrud.name === 'users'">
+        <v-autocomplete
+          v-model="completedFormField.gender"
+          label="Sexe"
+          :items="genders"
+          item-value="slug"
+          item-title="name"
+          variant="outlined"
+        ></v-autocomplete>
         <v-autocomplete
           v-model="completedFormField.role"
           chips
@@ -31,31 +39,22 @@
           variant="outlined"
         ></v-autocomplete>
         <v-autocomplete
-         v-show="completedFormField.role=== 'agency'"
-          v-model="completedFormField.agencyId"
-          chips
-          label="Selectionner l'agence"
-          :items="agencies"
-          item-value="id"
-          item-title="name"
-          variant="outlined"
-        ></v-autocomplete>
-        <!-- <v-autocomplete
           v-show="completedFormField.role=== 'subAgency'"
-          v-model="completedFormField.subAgencyId"
+          v-model="completedFormField.cityId"
           chips
-          label="Selectionner la sous agence"
-          :items="subAgencies"
+          label="Selectionner la ville"
+          :items="citiesData"
           item-value="id"
           item-title="name"
           variant="outlined"
         ></v-autocomplete>
-        -->
+        
       </div>
       <shared-button
         btn-class="btn-primary"
         :label="entityToCrud.btnTitle"
         class="mb-2"
+        :disabled="!isValid"
         type="submit"
         width="500"
       />
@@ -67,8 +66,7 @@
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
-const { data: agencies } = await useFetch(`${API_URL}/agency`);
-const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+const { data:citiesData, error, execute, refresh } = await useFetch(`${API_URL}/cities`)
 const operations = reactive([
   {
     id:1,
@@ -82,6 +80,7 @@ const operations = reactive([
   
 ])
 const roles = useRoles();
+const genders = useGenders()
 type Props = {
   isOpenDrawer: boolean;
   formFields: FormType[];

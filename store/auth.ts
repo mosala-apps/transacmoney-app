@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     state: () => ({
       isAuthenticated: false,
       loading: false,
+      statusCode: null,
       error: null,
       user,
     }),
@@ -26,9 +27,15 @@ export const useAuthStore = defineStore('auth', {
           if (data.value) {
             const token = useCookie('access_token'); 
             token.value = data?.value?.access_token; // set token to cookie
-            this.isAuthenticated = true; // set authenticated  state value to true
-            this.user = data?.value?.user; 
+            this.isAuthenticated = true; 
+            
+            this.user = {...data?.value?.user, accessToken: token?.value, agency:data?.value?.agency} 
           }
+          else{
+            this.error= error?.value?.data.message
+            this.statusCode =error?.value?.data.statusCode
+          }
+          //return this.statusCode
         } catch (error) {
         }
        

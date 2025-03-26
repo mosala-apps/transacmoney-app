@@ -1,113 +1,156 @@
-
 <script lang="ts" setup>
-import { FormType } from '~/types/form.type';
-import { IEntityCrud } from '~/types/user.interface';
-import {API_URL} from '~/config/ApiURL'
-import { useACLRole } from '~/composables/aclRole';
-import { useAgencyStore } from '~/store/agencies';
-import { useCityStore } from '~/store/cities';
-let  reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/agencies`,{
-  watch:[reload]
-})
+import { FormType } from "~/types/form.type";
+import { ITransaction } from "~/types/transaction.interface";
+import { IEntityCrud } from "~/types/user.interface";
+import { API_URL } from "~/config/ApiURL";
+import { useACLRole } from "~/composables/aclRole";
+import { useAgencyStore } from "~/store/agencies";
+import { useAuthStore } from "~/store/auth";
+import { DestinationTypeEnum, StatusTransaction, TransactionEnum } from "~/types/transaction.enum";
+import { useUsersStore } from "~/store/users";
+import { useTransactionStore } from "~/store/transaction";
+import { useCurrencyStore } from "~/store/currency";
+import { useCityStore } from "~/store/cities";
+import { storeToRefs } from "pinia";
+const route = useRoute();
 
-const { agencies, getAllAgencies} = useAgencyStore()
+let reload = ref(false);
+let destinationTypes =ref<any[]>([
+  {
+   id: DestinationTypeEnum.LOCAL,
+   name: 'Locale'
+  },
+  {
+   id:DestinationTypeEnum.INTERNATIONAL,
+   name:'Internationale' 
+  }
+])
+const {getAgencyTransactionsByType} = useTransactionStore()
+const {deposits,isLoading, error} = storeToRefs(useTransactionStore())
+const {users , getAllUsers} = useUsersStore()
+const { currencies, getAllCurrencies} = useCurrencyStore()
 const { cities, getAllCities}= useCityStore()
+getAllUsers()
+getAllCurrencies()
+getAllCities()
+
+
 const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
- // middleware:'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
-  name: "deposit",
-  formTitle: "Créer un depot",
+  name: "Operation",
+  formTitle: "Effectuer un nouveau dépot",
   btnTitle: "Enregistrer",
-})
-const formFields:FormType[] = reactive<FormType[]>([
+});
+const formFields: FormType[] = reactive<FormType[]|any[]>([
   {
-    name: "name",
-    type: "text",
-    id: "name",
-    label: "Nom de l'agence",
-    rules: [validate.required]
+    name: "amount",
+    type: "number",
+    id: "amount",
+    label: "Montant",
+    rules: [validate.required, validate.numbers],
   },
   {
-    name: "email",
-    type: "email",
-    id: "email",
-    label: "Email de l'agence",
-    rules: [validate.required, validate.email]
+    name: "currencyId",
+    type: "select",
+    id: "currencyId",
+    label: "Devise",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: currencies,
   },
   {
-    name: "phone",
-    type: "text",
+    name: "senderId",
+    type: "select",
     id: "phone",
-    label: "Telephone de l'agence",
-    rules: [validate.required]
+    label: "Expediteur",
+    itemValue:'id',
+    itemTitle:'userSearchTerm',
+    rules: [validate.required],
+    values: users,
+  },
+ 
+  {
+    name: "receiverId",
+    type: "select",
+    id: "phone",
+    label: "Beneficiaire",
+    itemValue:'id',
+    itemTitle:'userSearchTerm',
+    rules: [validate.required],
+    values: users,
   },
   
   {
-    name: "address",
-    type: "text",
-    id: "location",
-    label: "Lieu",
-    rules: [validate.required]
+    name: "destinationType",
+    type: "select",
+    id: "destinationType",
+    label: "Type de transfert",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: destinationTypes,
   },
   {
-    name: "accountSold",
-    type: "number",
-    id: "accountSold",
-    label: "Solde",
-    rules: [validate.required, validate.numbers]
+    name: "destinationCityId",
+    type: "select",
+    id: "destinationCityId",
+    label: "Ville de destination",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: cities,
   },
-  // {
-  //   name: "cityId",
-  //   type: "select",
-  //   id: "cityId",
-  //   label: "Ville",
-  //   values:citiesData.value as any,
-  //   rules: [validate.required]
-  // },
-]);
-
-const subMenus = reactive([
-  {
-    name: "Agences",
-    path: "/admin/agencies",
-  },
-  {
-    name: "Sous-Agences",
-    path: "/admin/agencies/sub-agencies",
-  },
+  
+ 
 ]);
 
 const headers = reactive([
   {
-    title: "Nom",
+    title: "Montant",
     align: "start",
     sortable: false,
-    key: "name",
+    key: "amount",
   },
-  { title: "solde", align: "end", key: "account.amount" },
-  { title: "Responsable", align: "end", key: "users" },
-  { title: "Telephone", align: "end", key: "phone" },
+  { title: "code", align: "end", key: "transactionCode" },
+  { title: "Devise", align: "end", key: "currency.name" },
+  { title: "Expediteur", align: "end", key: "sender.fullName" },
+  { title: "Beneficiaire", align: "end", key: "receiver.fullName" },
+  { title: "Origine", align: "end", key: "originCity.name" },
+  { title: "Destination", align: "end", key: "destinationCity.name" },
+  { title: "Statut", align: "end", key: "status" },
+  { title: "Date", align: "end", key: "updatedAt" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 
-const handleSubmit =(value:any)=>{
-  
+const handleSubmit = (value: any) => {
+  getAgencyTransactionsByType(TransactionEnum.DEPOSIT, reload)
+};
+onMounted( async ()=>{
+  await getAgencyTransactionsByType(TransactionEnum.DEPOSIT, reload)
+})
+watch(() => route.fullPath, async () => {
   reload.value = true;
-}
+  await getAgencyTransactionsByType(TransactionEnum.DEPOSIT, reload.value);
+});
 </script>
 
 <template>
-  <sharedAdminContainer :subMenus="subMenus">
-    <div>
-      <transactions-deposit-data-table
-        :data="data"
+  <sharedAdminContainer :showSubMenus="false">
+    <div v-if="isLoading">
+       Chargement
+    </div>
+    <div v-else>
+      <transactions-data-table
+        :showMenus="false"
+        :data="deposits"
         :headers="headers"
-        titleSection="Liste des depots"
+        :type="TransactionEnum.DEPOSIT"
+        titleSection="Liste des operations"
         :entityToCrud="entityToCrud"
         :formFields="formFields"
         @handleSubmit="handleSubmit"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between pa-12">
+    <div class="d-flex flex-column flex-sm-row justify-space-between pa-12">
       <h2 class="text-slate">{{ props.titleSection }}</h2>
     </div>
     <v-divider color="primary"></v-divider>

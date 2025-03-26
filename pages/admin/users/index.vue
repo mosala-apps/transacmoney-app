@@ -12,6 +12,7 @@ let  reload = ref(false);
 const { data, error, execute, refresh, pending } = await useFetch(`${API_URL}/users`,{
   watch:[reload]
 })
+const { data: agencies } = await useFetch(`${API_URL}/agencies`);
 
 const validate = useFormRules();
 
@@ -22,10 +23,24 @@ let entityToCrud: IEntityCrud = reactive({
 });
 const formFields: FormType[] = reactive<FormType[]>([
   {
-    name: "username",
+    name: "name",
     type: "text",
     id: "name",
-    label: "Nom de l'utilisateur",
+    label: "Nom ",
+    rules: [validate.required],
+  },
+  {
+    name: "lastName",
+    type: "text",
+    id: "lastName",
+    label: "Postnom",
+    rules: [],
+  },
+  {
+    name: "firstName",
+    type: "text",
+    id: "firstName",
+    label: "Prenom",
     rules: [validate.required],
   },
   {

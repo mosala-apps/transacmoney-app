@@ -6,14 +6,11 @@ import {API_URL} from '~/config/ApiURL'
 import { useACLRole } from '~/composables/aclRole';
 import { useAgencyStore } from '~/store/agencies';
 import { useCityStore } from '~/store/cities';
+import { useCurrencyStore } from '~/store/currency';
 let  reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/agencies`,{
+const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/agencies`,{
   watch:[reload]
 })
-
-const { agencies, getAllAgencies} = useAgencyStore()
-const { cities, getAllCities}= useCityStore()
-const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
@@ -24,52 +21,6 @@ let entityToCrud: IEntityCrud = reactive({
   formTitle: "Créer une agence",
   btnTitle: "Enregistrer",
 })
-const formFields:FormType[] = reactive<FormType[]>([
-  {
-    name: "name",
-    type: "text",
-    id: "name",
-    label: "Nom de l'agence",
-    rules: [validate.required]
-  },
-  {
-    name: "email",
-    type: "email",
-    id: "email",
-    label: "Email de l'agence",
-    rules: [validate.required, validate.email]
-  },
-  {
-    name: "phone",
-    type: "text",
-    id: "phone",
-    label: "Telephone de l'agence",
-    rules: [validate.required]
-  },
-  
-  {
-    name: "address",
-    type: "text",
-    id: "location",
-    label: "Lieu",
-    rules: [validate.required]
-  },
-  {
-    name: "accountSold",
-    type: "number",
-    id: "accountSold",
-    label: "Solde",
-    rules: [validate.required, validate.numbers]
-  },
-  // {
-  //   name: "cityId",
-  //   type: "select",
-  //   id: "cityId",
-  //   label: "Ville",
-  //   values:citiesData.value as any,
-  //   rules: [validate.required]
-  // },
-]);
 
 const subMenus = reactive([
   {
@@ -103,13 +54,15 @@ const handleSubmit =(value:any)=>{
 
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div>
+  <div v-if="pending==='pending'">
+     tes
+  </div>
+    <div v-else>
       <admin-agencies-data-table
         :data="data"
         :headers="headers"
         titleSection="Liste des Agences"
         :entityToCrud="entityToCrud"
-        :formFields="formFields"
         @handleSubmit="handleSubmit"
       />
     </div>

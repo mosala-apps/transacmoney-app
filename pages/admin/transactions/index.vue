@@ -2,34 +2,27 @@
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
-import { useACLRole } from "~/composables/aclRole";
-import { useAgencyStore } from "~/store/agencies";
-import { useAuthStore } from "~/store/auth";
-const {user} = useAuthStore()
-const token = useCookie('access_token');
-let reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/transactions`, {
-  watch: [reload],
-  headers: {
-      Authorization: `Bearer ${token.value}`
-  }
-});
-const {
-  data: users,
-} = await useFetch(`${API_URL}/users`);
+import { useTransactionStore } from "~/store/transaction";
+import { storeToRefs } from "pinia";
 
-// const { agencies, getAllAgencies } = useAgencyStore();
+
+const route = useRoute();
+let reload = ref(false);
+const {getAllTransactions} = useTransactionStore()
+const {transactions,isLoading, error} = storeToRefs(useTransactionStore())
+const { data: users } = await useFetch(`${API_URL}/users`);
 const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
+  middleware: "admin",
 });
 let entityToCrud: IEntityCrud = reactive({
   name: "Operation",
   formTitle: "Créer une nouvelle operation",
   btnTitle: "Enregistrer",
 });
-const formFields: FormType[] = reactive<FormType[]|any[]>([
+const formFields: FormType[] = reactive<FormType[] | any[]>([
   {
     name: "name",
     type: "text",
@@ -37,22 +30,22 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     label: "Libelle",
     rules: [validate.required],
   },
- 
+
   {
     name: "operationTypeId",
     type: "select",
     id: "phone",
     label: "Types Operation",
-    itemValue:'id',
-    itemTitle:'name',
+    itemValue: "id",
+    itemTitle: "name",
     rules: [validate.required],
     values: [
       {
-        id: 'DEPOSIT',
+        id: "DEPOSIT",
         name: "Depot",
       },
       {
-        id: 'TRANSFER_TO',
+        id: "WITHDRAWAL",
         name: "Transfert",
       },
     ],
@@ -62,8 +55,8 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     type: "select",
     id: "agencyId",
     label: "Agence Beneficiaire",
-    itemValue:'id',
-    itemTitle:'name',
+    itemValue: "id",
+    itemTitle: "name",
     rules: [validate.required],
     values: [],
   },
@@ -72,8 +65,8 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     type: "select",
     id: "phone",
     label: "Beneficiaire",
-    itemValue:'id',
-    itemTitle:'username',
+    itemValue: "id",
+    itemTitle: "name",
     rules: [validate.required],
     values: users,
   },
@@ -82,8 +75,8 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     type: "select",
     id: "phone",
     label: "Expediteur",
-    itemValue:'id',
-    itemTitle:'username',
+    itemValue: "id",
+    itemTitle: "name",
     rules: [validate.required],
     values: users,
   },
@@ -94,7 +87,6 @@ const formFields: FormType[] = reactive<FormType[]|any[]>([
     label: "Montant",
     rules: [validate.required, validate.numbers],
   },
-
 ]);
 
 const headers = reactive([
@@ -106,15 +98,22 @@ const headers = reactive([
   },
   { title: "Devise", align: "end", key: "currency.name" },
   { title: "type", align: "end", key: "type" },
-  { title: "Expediteur", align: "end", key: "sender.name" },
-  { title: "Beneficiaire", align: "end", key: "receiver.name" },
+  { title: "Expediteur", align: "end", key: "sender.fullName" },
+  { title: "Beneficiaire", align: "end", key: "receiver.fullName" },
   { title: "Origine", align: "end", key: "originCity.name" },
   { title: "Destination", align: "end", key: "destinationCity.name" },
   { title: "Statut", align: "end", key: "status" },
-  { title: "Date operation", align: "end", key: "updatedAt" },
+  { title: "Date", align: "end", key: "updatedAt" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 
+onMounted( async ()=>{
+  await getAllTransactions(reload.value)
+})
+watch(() => route.fullPath, async () => {
+  reload.value = true;
+  await getAllTransactions(reload.value)
+});
 const handleSubmit = (value: any) => {
   reload.value = true;
 };
@@ -123,16 +122,15 @@ const handleSubmit = (value: any) => {
 <template>
   <sharedAdminContainer :showSubMenus="false">
     <div>
-     <admin-transactions-data-table
+      <admin-transactions-data-table
         :showMenus="false"
-        :data="data"
+        :data="transactions"
         :headers="headers"
         titleSection="Liste des operations"
         :entityToCrud="entityToCrud"
         :formFields="formFields"
         @handleSubmit="handleSubmit"
       />
-       
     </div>
   </sharedAdminContainer>
 </template>

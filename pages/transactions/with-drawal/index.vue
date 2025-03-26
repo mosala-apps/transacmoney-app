@@ -1,157 +1,161 @@
 <script lang="ts" setup>
 import { FormType } from "~/types/form.type";
+import { ITransaction } from "~/types/transaction.interface";
 import { IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
+import { useACLRole } from "~/composables/aclRole";
+import { useAgencyStore } from "~/store/agencies";
+import { useAuthStore } from "~/store/auth";
+import { DestinationTypeEnum, StatusTransaction, TransactionEnum } from "~/types/transaction.enum";
+import { useUsersStore } from "~/store/users";
+import { useTransactionStore } from "~/store/transaction";
+import { useCurrencyStore } from "~/store/currency";
+import { useCityStore } from "~/store/cities";
+import { storeToRefs } from "pinia";
+
+let reload = ref(false);
+let destinationTypes =ref<any[]>([
+  {
+   id: DestinationTypeEnum.LOCAL,
+   name: 'Locale'
+  },
+  {
+   id:DestinationTypeEnum.INTERNATIONAL,
+   name:'Internationale' 
+  }
+])
+const {getAgencyTransactionsByType} = useTransactionStore()
+const {getAllUsers} = useUsersStore()
+const { getAllCurrencies} = useCurrencyStore()
+const { getAllCities}= useCityStore()
+
+// ref
+const {users } = storeToRefs(useUsersStore())
+const { cities}= storeToRefs(useCityStore())
+const {withdrawals ,isLoading, error} = storeToRefs(useTransactionStore())
+const { currencies} =  storeToRefs(useCurrencyStore())
+
+
+
+onMounted( async ()=>{
+  await getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
+  getAllUsers()
+  getAllCurrencies()
+  getAllCities()
+})
+const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
-  middleware: 'admin'
 });
-let reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/users`, {
-  watch: [reload]
-})
-
-const validate = useFormRules();
-
 let entityToCrud: IEntityCrud = reactive({
-  name: "users",
-  formTitle: "Créer un utilisateur",
+  name: "Operation",
+  formTitle: "Effectuer un nouveau retrait",
   btnTitle: "Enregistrer",
 });
-const formFields: FormType[] = reactive<FormType[]>([
+const formFields: FormType[] = reactive<FormType[]|any[]>([
   {
-    name: "username",
-    type: "text",
-    id: "name",
-    label: "Nom de l'utilisateur",
-    rules: [validate.required],
+    name: "amount",
+    type: "number",
+    id: "amount",
+    label: "Montant",
+    rules: [validate.required, validate.numbers],
   },
   {
-    name: "email",
+    name: "currencyId",
     type: "select",
-    id: "email",
-    label: "Email",
-    rules: [validate.email],
+    id: "currencyId",
+    label: "Devise",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: currencies.value,
   },
   {
-    name: "phone",
-    type: "text",
+    name: "senderId",
+    type: "select",
     id: "phone",
-    label: "Telephone",
+    label: "Expediteur",
+    itemValue:'id',
+    itemTitle:'userSearchTerm',
     rules: [validate.required],
+    values: users.value,
   },
+ 
   {
-    name: "password",
-    type: "text",
-    id: "location",
-    label: "Mot de passe",
+    name: "receiverId",
+    type: "select",
+    id: "phone",
+    label: "Beneficiaire",
+    itemValue:'id',
+    itemTitle:'userSearchTerm',
     rules: [validate.required],
+    values: users.value,
   },
-]);
-const subMenus = reactive([
+  
   {
-    name: "Agents",
+    name: "destinationType",
+    type: "select",
+    id: "destinationType",
+    label: "Type de transfert",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: destinationTypes,
   },
   {
-    name: "Sous-Agents",
-    path: "/admin/agencies/sub-agencies",
+    name: "destinationCityId",
+    type: "select",
+    id: "destinationCityId",
+    label: "Ville de destination",
+    itemValue:'id',
+    itemTitle:'name',
+    rules: [validate.required],
+    values: cities.value,
   },
+  
+ 
 ]);
 
 const headers = reactive([
   {
-    title: "Nom",
+    title: "Montant",
     align: "start",
     sortable: false,
-    key: "username",
+    key: "amount",
   },
-  {
-    title: "Email",
-    align: "start",
-    sortable: false,
-    key: "email",
-  },
-  { title: "Role", align: "center", key: "role" },
-  { title: "actions", align: "end", key: "actions" },
+  { title: "Devise", align: "end", key: "currency.name" },
+  { title: "Expediteur", align: "end", key: "sender.fullName" },
+  { title: "Beneficiaire", align: "end", key: "receiver.fullName" },
+  { title: "Origine", align: "end", key: "originCity.name" },
+  { title: "Destination", align: "end", key: "destinationCity.name" },
+  { title: "Statut", align: "end", key: "status" },
+  { title: "Date", align: "end", key: "updatedAt" },
+  //{ title: "actions", align: "end", key: "actions" },
 ]);
+
 const handleSubmit = (value: any) => {
-  reload.value = true;
+  getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
 };
 
 </script>
+
 <template>
-  <sharedAdminContainer :subMenus="subMenus">
-    <div>
-      <admin-users-data-table :data="data" :headers="headers" titleSection="Liste des utilisateurs"
-        :entityToCrud="entityToCrud" :formFields="formFields" @handleSubmit="handleSubmit" />
+  <sharedAdminContainer :showSubMenus="false">
+    <div v-if="isLoading">
+       Chargement
+    </div>
+    <div v-else>
+      <transactions-data-table
+        :showMenus="false"
+        :data="withdrawals"
+        :type="TransactionEnum.WITHDRAWAL"
+        :headers="headers"
+        titleSection="Liste des operations"
+        :entityToCrud="entityToCrud"
+        :formFields="formFields"
+        @handleSubmit="handleSubmit"
+      />
     </div>
   </sharedAdminContainer>
 </template>
-<style lang="scss">
-@import '@/assets/main';
-
-.event-data-table__action {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  margin-top: 1.5rem;
-}
-
-.card-kpi {
-  background-color: $white-color;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: transform .3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  height: 200px;
-
-  &:hover {
-    transform: scale(1.09);
-  }
-}
-
-.participants-link {
-  &:hover {
-    text-decoration: underline !important;
-    // color: $secondary-color;
-  }
-}
-
-.statistic-section {
-  padding-top: 70px;
-  padding-bottom: 70px;
-}
-
-.count-title {
-  font-size: 50px;
-  margin-top: 10px;
-  margin-bottom: 0;
-  text-align: center;
-  font-weight: bold;
-}
-
-.stats-text {
-  font-size: 15px;
-  margin-top: 15px;
-  margin-bottom: 0;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.stats-line-black {
-  margin: 12px auto 0;
-  width: 55px;
-  height: 2px;
-}
-
-.stats-icon {
-  font-size: 35px;
-  margin: 0 auto;
-  float: none;
-  display: table;
-  // color: $secondary-color;
-}
-</style>

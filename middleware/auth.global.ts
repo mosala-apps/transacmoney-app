@@ -9,10 +9,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!accessToken && requiresNonAuth && transactionsAuth) return navigateTo('/auth/signin')
     const {isAuthenticated,user} = storeToRefs(useAuthStore())
     const role = useACLRole()
-    console.log("Auth", role.canAdminsView.value )
+   // console.log("Auth", role.canAdminsView.value )
     try {
         if (accessToken) {
-            isAuthenticated.value = true
+            //isAuthenticated.value = true
         }
         if (urlRequiresNonAuth && accessToken) {
             if (role.canAdminsView.value) {

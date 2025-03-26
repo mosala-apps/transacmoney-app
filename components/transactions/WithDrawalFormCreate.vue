@@ -8,7 +8,7 @@
     style="top: 0; height: 100%"
   >
     <v-divider color="primary"></v-divider>
-    <h4 class="ma-6 text-center text-uppercase">{{ entityToCrud.formTitle }}</h4>
+    <h4 class="ma-6 text-center text-uppercase">EFFECTUER UN DEPOT</h4>
     <v-divider color="primary"></v-divider>
     <v-form
       v-model="isValid"
@@ -26,11 +26,13 @@
           :items="formField.values"
           :item-value="formField.itemValue"
           :item-title="formField.itemTitle"
+          :rules="formField.rules"
           variant="outlined"
         ></v-autocomplete>
         <div v-else>
-          <label class="label text-grey-darken-2" for="password">{{ formField["label"] }}</label>
+          <!-- <label class="label text-grey-darken-2" for="password">{{ formField["label"] }}</label> -->
           <v-textField
+            :label="formField.label"
             :rules="formField.rules"
             v-model="completedFormField[formField.name]"
             :id="formField.name"
@@ -45,7 +47,9 @@
         :label="entityToCrud.btnTitle"
         class="mb-2"
         type="submit"
+        :disabled="!isValid"
         width="500"
+        i
       />
     </v-form>
   </v-navigation-drawer>
@@ -53,10 +57,13 @@
 
 <script setup lang="ts">
 import { FormType } from "~/types/form.type";
-import { IEntityCrud } from "~/types/user.interface";
+import { IAgency, IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
-const { data: agencies } = await useFetch(`${API_URL}/agency`);
-const { data: subAgencies } = await useFetch(`${API_URL}/subAgency`);
+import { useAuthStore } from "~/store/auth";
+import { ITransactionPayload } from "~/types/transaction.interface";
+import { DestinationTypeEnum, StatusTransaction, TransactionEnum } from "~/types/transaction.enum";
+const {user} = useAuthStore()
+const toast = useToast()
 type Props = {
   isOpenDrawer: boolean;
   formFields: FormType[];
@@ -86,13 +93,42 @@ watch(isOpen, (valueselection) => {
 });
 
 const onSubmit = async () => {
-  method.value = `store`;
-  isOpen.value = false;
-  let uri = props.entityToCrud.name === "user" ? "users" : props.entityToCrud.name;
-  await $fetch(`${API_URL}/${uri}/${method.value}`, {
+ 
+  let uri = 'transactions/create'
+  const transactionPayload: ITransactionPayload = {
+  type: TransactionEnum.DEPOSIT,
+  senderId: completedFormField.senderId,
+  receiverId: completedFormField.receiverId,
+  amount: Number(completedFormField.amount),
+  executorId: user.id,
+  currencyId: completedFormField.currencyId,
+  originCityId: user?.agency?.id as  number,
+  destinationCityId: completedFormField.destinationCityId,
+  destinationType: completedFormField.destinationType,
+  status: StatusTransaction.IN_PROGRESS,
+};
+
+try {
+  await $fetch(`${API_URL}/${uri}`, {
     method: "POST",
-    body: { ...completedFormField },
+    body: { ...transactionPayload },
+    headers: {
+              Authorization: `Bearer ${user.accessToken}`
+    }
   });
-  emit("handleSubmit", completedFormField);
+  toast.success('Le depot été effectué avec succès!',{
+   delay: 3000
+  }
+    
+  )
+  emit("handleSubmit", transactionPayload);
+  isOpen.value = false;
+} catch (error) {
+  //ts-ignore
+  toast.error("Echec lors de la creation d'un depot",{
+   delay: 3000
+  })
+}
+
 };
 </script>
