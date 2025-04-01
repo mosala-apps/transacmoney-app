@@ -7,10 +7,14 @@ import { useAgencyStore } from "~/store/agencies";
 let reload = ref(false);
 const { data:agencies, error, execute, refresh } = await useFetch(`${API_URL}/agency`, {
   watch: [reload],
+  key: 'agency-key',
+  immediate: true
+  
 });
 const {
   data: users,
-} = await useFetch(`${API_URL}/users`);
+} = await useFetch(`${API_URL}/users`,{  key: 'users-key',
+immediate: true});
 
 // const { agencies, getAllAgencies } = useAgencyStore();
 const validate = useFormRules();

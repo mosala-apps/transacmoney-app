@@ -10,7 +10,10 @@ export const useCityStore = defineStore("city", {
   actions: {
     async getAllCities(){
        try {
-        const { data, error, execute, refresh } = await useFetch(`${API_URL}/cities`)
+        const { data, error, execute, refresh } = await useFetch(`${API_URL}/cities`,{
+          key: 'cities-key',
+          immediate: true,
+        })
         if (data.value) {
             this.cities = data.value
         }

@@ -21,7 +21,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   (e: "handleSubmit", value: any): void;
 }>();
-const formattedHeaders =computed(()=>props.headers.map((h)=>({...h, title: h?.title?.toUpperCase()})))
+const formattedHeaders =computed(()=>props.headers.map((h:any)=>({...h, title: h?.title?.toUpperCase()})))
 
 const total = 100;
 let loading = ref(false);
@@ -46,6 +46,8 @@ const close = (value: boolean) => {
   <div>
     <div class="d-flex flex-column flex-sm-row justify-space-between pa-12">
       <h2 class="text-slate">{{ props.titleSection }}</h2>
+      <shared-button v-show="canAdminsView" btn-class="btn-primary" :label="entityToCrud.btnTitle" class="mb-2"
+      @onClick="isOpenDrawer = !isOpenDrawer" />
     </div>
     <v-divider color="primary"></v-divider>
     <v-data-table
@@ -64,6 +66,10 @@ const close = (value: boolean) => {
       }"
       @pagination="handlePagination"
     >
+  
+    <template #[`item.commission`]="{ item }">
+      <span class="text-blue-500"> {{ Number(item.selectable?.amountWithCommission) - Number(item.selectable?.amount) }}</span>
+    </template>
       <template #[`item.type`]="{ item }">
         <v-chip size="small" color="green">
           <span class="text-blue-500"> {{ getFormattedTransactionType(item.selectable) }}</span>

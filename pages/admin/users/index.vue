@@ -10,7 +10,10 @@ definePageMeta({
 });
 let  reload = ref(false);
 const { data, error, execute, refresh, pending } = await useFetch(`${API_URL}/users`,{
-  watch:[reload]
+  watch:[reload],
+  key:'users-key',
+  immediate: true,
+  server: false
 })
 const { data: agencies } = await useFetch(`${API_URL}/agencies`);
 

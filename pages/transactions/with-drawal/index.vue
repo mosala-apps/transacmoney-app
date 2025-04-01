@@ -34,15 +34,6 @@ const {users } = storeToRefs(useUsersStore())
 const { cities}= storeToRefs(useCityStore())
 const {withdrawals ,isLoading, error} = storeToRefs(useTransactionStore())
 const { currencies} =  storeToRefs(useCurrencyStore())
-
-
-
-onMounted( async ()=>{
-  await getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
-  getAllUsers()
-  getAllCurrencies()
-  getAllCities()
-})
 const validate = useFormRules();
 
 definePageMeta({
@@ -134,8 +125,14 @@ const headers = reactive([
   //{ title: "actions", align: "end", key: "actions" },
 ]);
 
+onMounted( async ()=>{
+  await getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
+  getAllUsers()
+  getAllCurrencies()
+  getAllCities()
+})
 const handleSubmit = (value: any) => {
-  getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
+  //getAgencyTransactionsByType(TransactionEnum.WITHDRAWAL, reload)
 };
 
 </script>

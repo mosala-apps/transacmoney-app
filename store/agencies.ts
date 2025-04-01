@@ -10,7 +10,10 @@ export const useAgencyStore = defineStore("agency", {
   actions: {
     async getAllAgencies(){
        try {
-        const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`)
+        const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`,{
+          key: 'agencies-key',
+          immediate: true,
+        })
         if (data.value) {
             this.agencies = data.value
         }

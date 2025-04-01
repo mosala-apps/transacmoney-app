@@ -17,7 +17,10 @@ const validate = useFormRules();
 
 let reload = ref(false);
 const { data, error, execute, refresh } = await useFetch(`${API_URL}/agencies/sub-agencies`, {
-  watch: [reload]
+  watch: [reload],
+  key: 'sub-agencies-key',
+  immediate: true
+  
 })
 definePageMeta({
   layout: "admin",

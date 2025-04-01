@@ -8,8 +8,18 @@
     style="top: 0; height: 100%"
   >
     <v-divider color="primary"></v-divider>
+    <v-icon
+      size="30"
+      color="primary"
+      class="d-lg-none d-xl-none d-xxl-none d-sm-flex"
+      @click="isOpen = !isOpen"
+      >mdi-arrow-left</v-icon
+    >
     <h4 class="ma-6 text-center text-uppercase">EFFECTUER UN DEPOT</h4>
     <v-divider color="primary"></v-divider>
+    <v-overlay :model-value="isProcessCommission" class="align-center justify-center">
+      <v-progress-circular color="primary" size="64" indeterminate></v-progress-circular>
+    </v-overlay>
     <v-form
       v-model="isValid"
       ref="Form"
@@ -36,6 +46,8 @@
             :rules="formField.rules"
             v-model="completedFormField[formField.name]"
             :id="formField.name"
+            :readonly="formField.readonly"
+            :disabled="formField.disabled"
             :name="formField.name"
             :type="formField.type"
           />
@@ -60,8 +72,9 @@ import { FormType } from "~/types/form.type";
 import { IAgency, IEntityCrud } from "~/types/user.interface";
 import { API_URL } from "~/config/ApiURL";
 import { useAuthStore } from "~/store/auth";
-import { ITransactionPayload } from "~/types/transaction.interface";
+import { ICalculateCommission, ITransactionPayload } from "~/types/transaction.interface";
 import { DestinationTypeEnum, StatusTransaction, TransactionEnum } from "~/types/transaction.enum";
+import { processCommissions } from "~/services/transactionService";
 const { user } = useAuthStore();
 const toast = useToast();
 type Props = {
@@ -80,6 +93,7 @@ let isOpen = ref<boolean>(props.isOpenDrawer);
 const completedFormField: any = reactive<any>({});
 let isValid = ref<boolean>(false);
 let method = ref<string>("");
+let isProcessCommission = ref<boolean>(false);
 
 watch(
   () => props.isOpenDrawer,
@@ -91,7 +105,53 @@ watch(
 watch(isOpen, (valueselection) => {
   emit("handleClose", valueselection);
 });
+watch(
+  () => completedFormField,
+  (newValue:any, oldValue) => {
+    console.log(newValue);
+    if (
+      newValue.destinationType !== "" &&
+      newValue.amount !== undefined &&
+      newValue.currencyId !== undefined
+    ) {
+      calculateCommissions();
+    }
+  },
+  { deep: true }
+);
 
+const calculateCommissions = () => {
+  const payload: ICalculateCommission = {
+    amount: Number(completedFormField.amount),
+    destinationType: completedFormField.destinationType,
+    currencyId: completedFormField.currencyId,
+  };
+  isProcessCommission.value = true;
+  processCommissions(completedFormField, user.accessToken)
+    .then((data: any) => {
+      console.log(data);
+      if (data) {
+        completedFormField.commission =
+          `${data?.commission} ${data?.currency}` || data?.commission;
+        completedFormField.amountWithCommission =
+          `${data?.amountWithCommission} ${data?.currency}` ||
+          data?.amountWithCommission;
+      }
+
+      toast.success("Le montant, incluant la commission, a été correctement calculé.!", {
+        delay: 3000,
+      });
+    })
+    .catch((error: any) => {
+      console.log(error);
+      toast.error(error.message, {
+        delay: 3000,
+      });
+    })
+    .finally(() => {
+      isProcessCommission.value = false;
+    });
+};
 const onSubmit = async () => {
   let uri = "transactions/create";
   const transactionPayload: ITransactionPayload = {
@@ -99,6 +159,7 @@ const onSubmit = async () => {
     senderId: completedFormField.senderId,
     receiverId: completedFormField.receiverId,
     amount: Number(completedFormField.amount),
+    amountWithCommission: Number(completedFormField.amountWithCommission),
     executorId: user.id,
     currencyId: completedFormField.currencyId,
     originCityId: user?.agency?.id as number,

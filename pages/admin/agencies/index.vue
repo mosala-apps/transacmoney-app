@@ -9,7 +9,9 @@ import { useCityStore } from '~/store/cities';
 import { useCurrencyStore } from '~/store/currency';
 let  reload = ref(false);
 const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/agencies`,{
-  watch:[reload]
+  watch:[reload],
+  key: 'agencies2-key',
+  immediate: true
 })
 
 definePageMeta({

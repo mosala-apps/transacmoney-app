@@ -11,6 +11,8 @@ export const useTransactionStore = defineStore("transactionStore", {
     withdrawals:[],
     isLoading: false,
     error: null,
+    countAllEntities: null,
+    transactionsCountByAgency: null,
     transactionState:{} as ITransaction,
     token: useCookie('access_token')
    // reload: false,
@@ -45,18 +47,67 @@ export const useTransactionStore = defineStore("transactionStore", {
     async getAllTransactions(reload:any){
       try {
        const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/transactions`, {
-         watch: [],
+        key: 'transactions-key',
+        immediate: true,
          headers: {
              Authorization: `Bearer ${this.token}`
          }
        })
-       this.isLoading = pending.value
-       this.transactions = data as any
+      // this.isLoading = pending.value
+      console.log("transactions ref", data);
+      if (data && data?.value !== undefined) {
+        console.log("transactions ref2:",data)
+        console.log("transactions data:",data.value)
+        this.transactions = data.value;
+      }
       } catch (error) {
        
       }
 
    },
+   async getAllEntitiesCount(reload:any){
+    try {
+     const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/transactions/entities-count`, {
+      key: 'transactions-key',
+      immediate: true,
+       headers: {
+           Authorization: `Bearer ${this.token}`
+       }
+     })
+    // this.isLoading = pending.value
+    console.log("transactions ref", data);
+    if (data && data?.value !== undefined && data?.value?.statusCode === 200) {
+      console.log("transactions ref2:",data)
+      console.log("transactions data:",data.value)
+      this.countAllEntities = data.value?.data;
+    }
+    } catch (error) {
+     
+    }
+
+ },
+ async getTransactionStatsByAgency(reload:any){
+  try {
+   const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/transactions/count-by-agency`, {
+    key: 'transactions-key2',
+    immediate: true,
+     headers: {
+         Authorization: `Bearer ${this.token}`
+     }
+   })
+  // this.isLoading = pending.value
+  console.log("transactions ref", data);
+  if (data && data?.value !== undefined && data?.value?.statusCode === 200) {
+    console.log("transactions ref2:",data)
+    console.log("transactions data:",data.value)
+    this.transactionsCountByAgency = data.value?.data;
+  }
+  } catch (error) {
+   
+  }
+
+},
+
    setTransaction(transaction:any){
     try {
  

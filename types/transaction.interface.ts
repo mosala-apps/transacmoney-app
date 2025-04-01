@@ -24,18 +24,19 @@ import { IReceiver, ISender, IExecutor, IUser } from "./user.interface";
     currency: ICurrency;
   }
   
-  export interface ITransactionPayload{
-    type: TransactionEnum; 
+  export interface ITransactionPayload {
+    type: TransactionEnum;
     senderId: number;
-    receiverId: number; 
+    receiverId: number;
     amount: number;
-    executorId: number; 
+    amountWithCommission: number;
+    executorId: number;
     currencyId: number;
-    originCityId: number; 
-    destinationCityId: number; 
-    destinationType: DestinationTypeEnum; 
-    status: StatusTransaction; 
-    transactionCode?:string
+    originCityId: number;
+    destinationCityId: number;
+    destinationType: DestinationTypeEnum;
+    status: StatusTransaction;
+    transactionCode?: string;
   }
 
   export interface ITransactionUpdatePayload {
@@ -60,3 +61,8 @@ import { IReceiver, ISender, IExecutor, IUser } from "./user.interface";
     transactionCode: string;
   }
   
+  export interface ICalculateCommission{
+    amount: number;
+    currencyId: number
+    destinationType: DestinationTypeEnum; 
+  }

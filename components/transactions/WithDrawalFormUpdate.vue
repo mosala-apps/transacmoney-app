@@ -170,11 +170,11 @@ const onUpdate = async () => {
     });
     if (data.value) {
       toast.success("Operation reussi avec succès!");
-      router.push(`/transactions/with-drawal`);
+      router.push(`/transactions/with-drawal/print/${transactionState.value?.transactionCode}`)
     } else {
       errorMessage.value = error?.value?.data.message;
-      router.push(`/transactions/with-drawal/print/${transactionState.value?.transactionCode}`)
-      //toast.error(errorMessage.value);
+      //router.push(`/transactions/with-drawal/print/${transactionState.value?.transactionCode}`)
+      toast.error(errorMessage.value);
     }
   } catch (error) {
     console.log(error);

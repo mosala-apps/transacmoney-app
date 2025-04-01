@@ -5,12 +5,16 @@ import { API_URL } from "~/config/ApiURL";
 import { useTransactionStore } from "~/store/transaction";
 import { storeToRefs } from "pinia";
 
-
 const route = useRoute();
 let reload = ref(false);
-const {getAllTransactions} = useTransactionStore()
-const {transactions,isLoading, error} = storeToRefs(useTransactionStore())
-const { data: users } = await useFetch(`${API_URL}/users`);
+let isLoading = ref(false);
+
+const { getAllTransactions } = useTransactionStore();
+const { transactions, error } = storeToRefs(useTransactionStore());
+const { data: users } = await useFetch(`${API_URL}/users`, {
+  key: "users2-key",
+  immediate: true,
+});
 const validate = useFormRules();
 
 definePageMeta({
@@ -20,7 +24,7 @@ definePageMeta({
 let entityToCrud: IEntityCrud = reactive({
   name: "Operation",
   formTitle: "Créer une nouvelle operation",
-  btnTitle: "Enregistrer",
+  btnTitle: "Rafraichir",
 });
 const formFields: FormType[] = reactive<FormType[] | any[]>([
   {
@@ -94,7 +98,13 @@ const headers = reactive([
     title: "Montant",
     align: "start",
     sortable: false,
-    key: "amount",
+    key: "amountWithCommission",
+  },
+  {
+    title: "Frais",
+    align: "start",
+    sortable: false,
+    key: "commission",
   },
   { title: "Devise", align: "end", key: "currency.name" },
   { title: "type", align: "end", key: "type" },
@@ -107,21 +117,38 @@ const headers = reactive([
   { title: "actions", align: "end", key: "actions" },
 ]);
 
-onMounted( async ()=>{
-  await getAllTransactions(reload.value)
-})
-watch(() => route.fullPath, async () => {
-  reload.value = true;
-  await getAllTransactions(reload.value)
-});
-const handleSubmit = (value: any) => {
-  reload.value = true;
+const fetchData = async () => {
+  isLoading.value = true;
+  try {
+    await Promise.all([getAllTransactions()]);
+  } catch (error) {
+    console.error("Erreur lors du chargement des données :", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
+
+const handleSubmit = async () => {
+  reload.value = true;
+  isLoading.value = true;
+  await getAllTransactions();
+  isLoading.value = false;
+};
+
+onMounted(fetchData);
+
+watch(() => route.fullPath, fetchData);
 </script>
 
 <template>
   <sharedAdminContainer :showSubMenus="false">
-    <div>
+    <div v-if="isLoading" class="pa-6">
+      <div class="skeleton-container">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-row" v-for="i in 14" :key="i"></div>
+      </div>
+    </div>
+    <div v-else>
       <admin-transactions-data-table
         :showMenus="false"
         :data="transactions"
