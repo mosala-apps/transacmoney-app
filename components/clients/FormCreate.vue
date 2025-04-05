@@ -2,7 +2,7 @@
   <div>
     <v-divider color="primary"></v-divider>
     <h4 class="pt-3 text-center text-uppercase">{{ entityToCrud.formTitle }}</h4>
-    <div class="d-flex justify-center">
+    <div class="d-md-flex justify-center">
       <v-form
         v-model="isValid"
         ref="Form"

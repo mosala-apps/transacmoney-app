@@ -110,7 +110,7 @@ const completedFormField: any = reactive<any>({});
 let isValid = ref<boolean>(false);
 let method = ref<string>("");
 
-const formattedDate = computed(() => getDateFormatted(transactionState.value.createAt));
+const formattedDate = computed(() => getDateFormatted(transactionState.value.createdAt));
 onMounted( ()=>{
   fetchTransaction();
 })

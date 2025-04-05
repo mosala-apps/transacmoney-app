@@ -70,6 +70,6 @@ import { ITransaction } from '~/types/transaction.interface';
 
 const router = useRouter()
 const { transactionState } = storeToRefs(useTransactionStore());
-const formattedDate = computed(() => getDateFormatted(transactionState.value.createAt));
+const formattedDate = computed(() => getDateFormatted(transactionState.value.createdAt));
 const showPrintDialog = ref(false);
 </script>

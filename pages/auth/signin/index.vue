@@ -4,9 +4,21 @@
     style="background-color: aliceblue; height: 100%"
     class="d-flex justify-content-center"
   >
+
     <VRow no-gutters align="center" justify="center">
+      
       <VCol cols="12" md="3" style="background-color: white" class="pa-6 rounded-xl">
         <div v-show="isError">{{ error }}</div>
+          <div class="d-flex justify-center align-center flex-column">
+        <v-img
+          src="/images/logo-brand.png"
+          class="rounded"
+          height="100"
+          width="150"
+          contain
+          @click="miniVariant = !miniVariant"
+        ></v-img>
+      </div>
         <h1 class="text-center">Se Connecter</h1>
         <p class="text-medium-emphasis text-center">Saisissez vos coordonnées pour commencer</p>
 

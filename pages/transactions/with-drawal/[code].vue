@@ -1,3 +1,16 @@
+<template>
+  <sharedAdminContainer :showSubMenus="false">
+    <v-breadcrumbs :items="items">
+      <template v-slot:divider>
+        <v-icon icon="mdi-chevron-right"></v-icon>
+      </template>
+    </v-breadcrumbs>
+    <div>
+    <transactions-with-drawal-form-update/>
+    </div>
+  </sharedAdminContainer>
+</template>
+
 <script lang="ts" setup>
 import { FormType } from "~/types/form.type";
 import { ITransaction } from "~/types/transaction.interface";
@@ -61,15 +74,3 @@ let entityToCrud: IEntityCrud = reactive({
 
 </script>
 
-<template>
-  <sharedAdminContainer :showSubMenus="false">
-    <v-breadcrumbs :items="items">
-      <template v-slot:divider>
-        <v-icon icon="mdi-chevron-right"></v-icon>
-      </template>
-    </v-breadcrumbs>
-    <div>
-    <transactions-with-drawal-form-update/>
-    </div>
-  </sharedAdminContainer>
-</template>

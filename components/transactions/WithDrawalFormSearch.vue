@@ -27,7 +27,7 @@
         ref="Form"
         lazy-validation
         @submit.prevent.stop="onSubmit"
-        class="pa-12 d-flex justify-center"
+        class="pa-12 d-md-flex justify-center"
       >
         <div>
           <div>

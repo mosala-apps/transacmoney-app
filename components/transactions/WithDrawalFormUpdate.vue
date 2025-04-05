@@ -8,7 +8,7 @@
         <div></div>
       </div>
     </v-overlay>
-    <div class="d-flex justify-center pa-6">
+    <div class="d-md-flex justify-center pa-6">
       <v-form v-model="isValid" ref="Form" lazy-validation @submit.prevent.stop="onSubmit">
         <div class="mt-1" v-for="(formField, index) in formFields" :key="index">
           <v-autocomplete

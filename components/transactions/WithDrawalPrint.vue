@@ -2,7 +2,7 @@
     <v-container class="py-8">
       <v-card max-width="700" class="mx-auto py-6 px-4" elevation="0">
         <v-row justify="space-between">
-          <v-btn color="primary" @click="generatePDF">Télécharger PDF</v-btn>
+          <v-btn color="primary" @click="generatePDF" class="mb-2">Télécharger PDF</v-btn>
           <v-btn color="secondary" @click="printContent">Aperçu avant impression</v-btn>
         </v-row>
       </v-card>
@@ -29,7 +29,7 @@
   import { storeToRefs } from 'pinia';
   
   const { transactionState } = storeToRefs(useTransactionStore());
-  const formattedDate = computed(() => getDateFormatted(transactionState.value.createAt));
+  const formattedDate = computed(() => getDateFormatted(transactionState.value.createdAt));
   
   const pdfContent = ref<HTMLElement | null>(null);
   

@@ -9,7 +9,16 @@
       class="admin-panel"
     >
       <v-list>
-        <v-toolbar-title class="admin-panel__title text-uppercase py-4 text-bold">{{ title }} </v-toolbar-title>
+      <div class="d-flex justify-center align-center flex-column">
+        <v-img
+          src="/images/logo-brand.png"
+          class="rounded"
+          height="100"
+          width="150"
+          contain
+          @click="miniVariant = !miniVariant"
+        ></v-img>
+      </div>
         <v-divider class="pt-4"></v-divider>
         <v-list-item
           v-for="(item, i) in items"
@@ -85,6 +94,7 @@ const items: AdminMenusType[] = reactive<AdminMenusType[]>([
     isSubMenus: false,
     canView: canAgenciesView.value,
   },
+ 
   {
     name: "Utilisateurs",
     to: "/admin/users",
@@ -114,15 +124,22 @@ const items: AdminMenusType[] = reactive<AdminMenusType[]>([
     canView: canAgenciesView.value,
   },
   {
+    name: "Mes Commissions",
+    to: "/transactions/commissions",
+    icon: "mdi-currency-usd",
+    isSubMenus: false,
+    canView: canAgenciesView.value,
+  },
+  {
     name: "Mon Compte",
-    to: "/admin/agency/account",
+    to: "/accounts",
     icon: "mdi-bank-transfer",
     isSubMenus: false,
     canView: canAgenciesView.value,
   },
   {
     name: "Bureau de change",
-    to: "/admin/settings/change-money",
+    to: "/exchange",
     icon: "mdi-bank-transfer",
     isSubMenus: false,
     canView: canAgenciesView.value,

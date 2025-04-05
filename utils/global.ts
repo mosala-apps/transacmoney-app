@@ -15,6 +15,10 @@ export const getFormattedTransactionStatus = (status: string) => {
   else if (status === StatusTransaction.ACCEPTED ) return 'Traité'
   else if (status === StatusTransaction.REJECTED ) return 'Rejetée'
 }
+export const getFormattedCommissionStatus = (status: boolean) => {
+  if (status ) return "Payée";
+  return "Non payée"
+}
 export const getFormattedTransactionType = ({type, status}:any) => {
  
   if (type === TransactionEnum.WITHDRAWAL && status === StatusTransaction.ACCEPTED  ) return 'Retrait'

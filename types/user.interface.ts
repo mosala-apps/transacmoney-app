@@ -49,7 +49,7 @@ export interface ISender {
   role: string; // Possible à remplacer par un enum pour les rôles
 }
 export interface IUser {
-  createAt: string; // Date de création
+  createdAt: string; // Date de création
   updatedAt: string; // Date de mise à jour
   deletedAt: string | null; // Date de suppression (si applicable)
   id: number; // Identifiant unique

@@ -8,7 +8,7 @@ import { IReceiver, ISender, IExecutor, IUser } from "./user.interface";
   
   // Transaction sans 'id'
   export interface ITransaction {
-    createAt: string; // Date de création
+    createdAt: string; // Date de création
     updatedAt: string; // ISO string pour la date
     type: "DEPOSIT" | "WITHDRAWAL"; // Possible à remplacer par un enum pour les types de transaction
     amount: number;
