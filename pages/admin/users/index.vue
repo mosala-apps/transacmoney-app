@@ -1,17 +1,4 @@
-<template>
-  <sharedAdminContainer :subMenus="subMenus">
-    <div>
-      <shared-admin-data-table
-        :data="users"
-        :headers="headers"
-        titleSection="Liste des utilisateurs"
-        :entityToCrud="entityToCrud"
-        :formFields="formFields"
-        @handleSubmit="handleSubmit"
-      />
-    </div>
-  </sharedAdminContainer>
-</template>
+
 <script lang="ts" setup>
 import { FormType } from "~/types/form.type";
 import { IEntityCrud } from "~/types/user.interface";
@@ -21,28 +8,42 @@ definePageMeta({
   layout: "admin",
   middleware:'admin'
 });
-let reload = ref(false);
-const {
-  data: users,
-  error,
-  execute,
-  refresh,
-} = await useFetch(`${API_URL}/users`, {
-  watch: [reload],
-});
+let  reload = ref(false);
+const { data, error, execute, refresh, pending } = await useFetch(`${API_URL}/users`,{
+  watch:[reload],
+  key:'users-key',
+  immediate: true,
+  server: false
+})
+const { data: agencies } = await useFetch(`${API_URL}/agencies`);
+
 const validate = useFormRules();
 
 let entityToCrud: IEntityCrud = reactive({
-  name: "user",
+  name: "users",
   formTitle: "Créer un utilisateur",
   btnTitle: "Enregistrer",
 });
 const formFields: FormType[] = reactive<FormType[]>([
   {
-    name: "username",
+    name: "name",
     type: "text",
     id: "name",
-    label: "Nom de l'utilisateur",
+    label: "Nom ",
+    rules: [validate.required],
+  },
+  {
+    name: "lastName",
+    type: "text",
+    id: "lastName",
+    label: "Postnom",
+    rules: [],
+  },
+  {
+    name: "firstName",
+    type: "text",
+    id: "firstName",
+    label: "Prenom",
     rules: [validate.required],
   },
   {
@@ -50,7 +51,14 @@ const formFields: FormType[] = reactive<FormType[]>([
     type: "select",
     id: "email",
     label: "Email",
-    rules: [validate.required, validate.email],
+    rules: [validate.email],
+  },
+  {
+    name: "phone",
+    type: "text",
+    id: "phone",
+    label: "Telephone",
+    rules: [validate.required],
   },
   {
     name: "password",
@@ -83,8 +91,13 @@ const headers = reactive([
     sortable: false,
     key: "email",
   },
-  { title: "Agence", align: "end", key: "agency.name" },
-  { title: "Adresse", align: "end", key: "address" },
+  {
+    title: "Telephone",
+    align: "start",
+    sortable: false,
+    key: "phone",
+  },
+  { title: "Role", align: "center", key: "role" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 const handleSubmit = (value: any) => {
@@ -92,6 +105,23 @@ const handleSubmit = (value: any) => {
 };
 
 </script>
+<template>
+  <sharedAdminContainer :subMenus="subMenus">
+    <div  v-if="pending">
+      
+    </div>
+    <div v-else>
+      <admin-users-data-table
+        :data="data"
+        :headers="headers"
+        titleSection="Liste des utilisateurs"
+        :entityToCrud="entityToCrud"
+        :formFields="formFields"
+        @handleSubmit="handleSubmit"
+      />
+    </div>
+  </sharedAdminContainer>
+</template>
 <style lang="scss">
 @import '@/assets/main';
 .event-data-table__action {

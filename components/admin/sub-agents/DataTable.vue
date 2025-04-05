@@ -1,15 +1,7 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between pa-12">
+    <div class="d-flex flex-column flex-sm-row justify-space-between pa-12">
       <h2 class="text-slate">{{ props.titleSection }}</h2>
-
-      <shared-button
-        v-show="canAdminsView"
-        btn-class="btn-primary"
-        :label="entityToCrud.formTitle"
-        class="mb-2"
-        @onClick="isOpenDrawer = !isOpenDrawer"
-      />
     </div>
     <v-divider color="primary"></v-divider>
     <v-data-table
@@ -29,7 +21,7 @@
       @pagination="handlePagination"
     >
       <template #top>
-        <shared-admin-transactions-form-create
+        <admin-sub-agents-form-create
           :isOpenDrawer="isOpenDrawer"
           :formFields="formFields"
           :entityToCrud="entityToCrud"
@@ -37,6 +29,9 @@
           @handleSubmit="handleSubmit"
           style='z-index:20001;'
         />
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-btn variant="outlined" color="red">Désactiver</v-btn>
       </template>
     </v-data-table>
   </div>
@@ -66,6 +61,8 @@ const total = 100;
 let loading = ref(false);
 let isOpenDrawer = ref<boolean>(false);
 let searchTerm = ref("");
+
+
 
 const handleSubmit = (value: any) => {
   emit("handleSubmit", value);

@@ -4,17 +4,34 @@
     style="background-color: aliceblue; height: 100%"
     class="d-flex justify-content-center"
   >
+
     <VRow no-gutters align="center" justify="center">
+      
       <VCol cols="12" md="3" style="background-color: white" class="pa-6 rounded-xl">
-        <div v-show="isError">erurrr</div>
+        <div v-show="isError">{{ error }}</div>
+          <div class="d-flex justify-center align-center flex-column">
+        <v-img
+          src="/images/logo-brand.png"
+          class="rounded"
+          height="100"
+          width="150"
+          contain
+          @click="miniVariant = !miniVariant"
+        ></v-img>
+      </div>
         <h1 class="text-center">Se Connecter</h1>
         <p class="text-medium-emphasis text-center">Saisissez vos coordonnées pour commencer</p>
 
-        <v-form @submit.prevent="loginUser" class="mt-7">
+        <v-form 
+        @submit.prevent="loginUser" 
+        class="mt-7" 
+        type="POST"
+        v-model="isValid"
+         >
           <div class="mt-1">
-            <label class="label text-grey-darken-2" for="email">Email</label>
+            <label class="label text-grey-darken-2" for="email">Username ou Email ou Téléphone</label>
             <VTextField
-              :rules="[validate.required, validate.email]"
+              :rules="[validate.required, validate.validateIdentifier]"
               v-model="form.identifier"
               prepend-inner-icon="fluent:mail-24-regular"
               id="email"
@@ -39,22 +56,18 @@
               block
               min-height="44"
               class="gradient primary"
-              :disabled="isError"
+              :disabled="!isValid"
               :loading="isAuthenticating"
               >Se connecter</VBtn
             >
           </div>
         </v-form>
-        <p class="text-body-2 mt-10">
-          <NuxtLink to="/auth/reset-password" class="font-weight-bold text-primary"
-            >Mot de passe oublié?</NuxtLink
-          >
-        </p>
+      
         <p class="text-body-2 mt-4">
           <span
-            >Vous n'avez pas de compte ?
-            <NuxtLink to="/auth/signup" class="font-weight-bold text-primary"
-              >Inscrivez-vous</NuxtLink
+            >Mot de passe oublié?
+            <NuxtLink to="/auth/reset-password" class="font-weight-bold text-primary"
+              >Reinitialiser</NuxtLink
             ></span
           >
         </p>
@@ -70,23 +83,35 @@ import { useAuthStore } from "~/store/auth";
 let form = reactive({});
 
 const validate = useFormRules();
-const { login ,error} = useAuthStore();
-const { isAuthenticated } = storeToRefs(useAuthStore());
+const { login} = useAuthStore();
+const { isAuthenticated,statusCode,error } = storeToRefs(useAuthStore());
 let isAuthenticating = ref(false);
 let isError= ref(false);
+let isValid = ref(false);
 const router = useRouter();
 const user = reactive({});
 
+watch(isValid,(newValue)=>{
+  if (newValue) {
+    isAuthenticating.value = false;
+  }
+})
 const loginUser = async () => {
   try {
     isAuthenticating.value = true;
     await login(form);
-    if (isAuthenticated) {
-      isAuthenticating.value = false;
+    if (isAuthenticated.value) {
       router.push("/admin");
     }
+    else if(statusCode.value !== 200){
+      toast.error(error,{
+      // delay:3000
+      });
+    }
+    isAuthenticating.value = false;
   } catch (error) {
-    toast.error("Oups! une erreur s'est produite");
+    console.log(error)
+    toast.error("");
   }
 };
 

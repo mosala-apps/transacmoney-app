@@ -1,9 +1,9 @@
 import vuetify from "vite-plugin-vuetify";
 
 // PWA Config
-const title = "Vuetify 3 + Nuxt 3 Starter";
-const shortTitle = "Vuetify 3 + Nuxt 3 Starter";
-const description = "Template to get you up and running with Nuxt 3 & Vuetify 3";
+const title = "TransacMoney";
+const shortTitle = "TransacMoney";
+const description = "TransacMoney";
 const image = "https://vuetify3nuxt3starter.behonbaker.com/starter.png";
 const url = "https://vuetify3nuxt3starter.behonbaker.com/";
 
@@ -12,8 +12,9 @@ export default defineNuxtConfig({
   // import styles
   css: ["@/assets/main.scss"],
   // enable takeover mode
+  ssr:false,
   typescript: { shim: false },
-  build: { transpile: ["vuetify","vue-toastification"] },
+  build: { transpile: ["vuetify","vue-toastification","EasyDataTable"] },
   modules: [
     "@kevinmarrec/nuxt-pwa",
     "@pinia/nuxt",

@@ -23,7 +23,7 @@ html {
 /* Works on Firefox */
 * {
   scrollbar-width: 8px;
-  scrollbar-color: $white-color $secondary-color;
+  scrollbar-color: $white-light-color;
 }
 
 /* Works on Chrome, Edge, and Safari */
@@ -33,7 +33,7 @@ html {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 8px !important;
-  background-color: $secondary-color;
+  background-color: $white-light-color;
 }
 
 

@@ -5,59 +5,24 @@ import { IEntityCrud } from '~/types/user.interface';
 import {API_URL} from '~/config/ApiURL'
 import { useACLRole } from '~/composables/aclRole';
 import { useAgencyStore } from '~/store/agencies';
+import { useCityStore } from '~/store/cities';
+import { useCurrencyStore } from '~/store/currency';
 let  reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/agency`,{
-  watch:[reload]
+const { data, error, execute, refresh,pending } = await useFetch(`${API_URL}/agencies`,{
+  watch:[reload],
+  key: 'agencies2-key',
+  immediate: true
 })
-const { agencies, getAllAgencies} = useAgencyStore()
-const validate = useFormRules();
 
 definePageMeta({
   layout: "admin",
   middleware:'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
-  name: "Agency",
+  name: "agencies",
   formTitle: "Créer une agence",
   btnTitle: "Enregistrer",
 })
-const formFields:FormType[] = reactive<FormType[]>([
-  {
-    name: "name",
-    type: "text",
-    id: "name",
-    label: "Nom de l'agence",
-    rules: [validate.required]
-  },
-  {
-    name: "email",
-    type: "email",
-    id: "email",
-    label: "Email de l'agence",
-    rules: [validate.required, validate.email]
-  },
-  {
-    name: "phone",
-    type: "text",
-    id: "phone",
-    label: "Telephone de l'agence",
-    rules: [validate.required]
-  },
-  {
-    name: "address",
-    type: "text",
-    id: "location",
-    label: "Lieu",
-    rules: [validate.required]
-  },
-  {
-    name: "location",
-    type: "text",
-    id: "location",
-    label: "Ville",
-    rules: [validate.required]
-  },
-]);
 
 const subMenus = reactive([
   {
@@ -77,26 +42,29 @@ const headers = reactive([
     sortable: false,
     key: "name",
   },
-  { title: "solde", align: "end", key: "balance" },
+  { title: "solde", align: "end", key: "account.amount" },
   { title: "Responsable", align: "end", key: "users" },
-  { title: "Adresse", align: "end", key: "address" },
+  { title: "Telephone", align: "end", key: "phone" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 
 const handleSubmit =(value:any)=>{
+  
   reload.value = true;
 }
 </script>
 
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div>
-      <shared-admin-data-table
+  <div v-if="pending==='pending'">
+     tes
+  </div>
+    <div v-else>
+      <admin-agencies-data-table
         :data="data"
         :headers="headers"
         titleSection="Liste des Agences"
         :entityToCrud="entityToCrud"
-        :formFields="formFields"
         @handleSubmit="handleSubmit"
       />
     </div>

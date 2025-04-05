@@ -40,7 +40,7 @@
           item-title="name"
           variant="outlined"
         ></v-autocomplete>
-        <v-autocomplete
+        <!-- <v-autocomplete
           v-show="completedFormField.role=== 'subAgency'"
           v-model="completedFormField.subAgencyId"
           chips
@@ -50,6 +50,7 @@
           item-title="name"
           variant="outlined"
         ></v-autocomplete>
+        -->
       </div>
       <shared-button
         btn-class="btn-primary"

@@ -1,17 +1,11 @@
 <template>
   <sharedAdminContainer :subMenus="subMenus">
-    <div v-if="!error && data && data.length> 0">
-      <shared-admin-data-table 
-       :data="data"
-       :headers="headers"
-        titleSection="Liste des sous Agences"
-       :formFields="formFields"
-       :entityToCrud="entityToCrud"
-       @handleSubmit="handleSubmit"
-       />
+    <div v-if="!error && data && data.length > 0">
+      <admin-sub-agents-data-table :data="data" :headers="headers" titleSection="Liste des sous Agents"
+        :formFields="formFields" :entityToCrud="entityToCrud" @handleSubmit="handleSubmit" />
     </div>
     <div v-else>
-       {{ error }}
+      {{ error }}
     </div>
   </sharedAdminContainer>
 </template>
@@ -21,13 +15,16 @@ import { FormType } from '~/types/form.type';
 import { IEntityCrud } from '~/types/user.interface';
 const validate = useFormRules();
 
-let  reload = ref(false);
-const { data, error, execute, refresh } = await useFetch(`${API_URL}/subAgency`,{
-  watch:[reload]
+let reload = ref(false);
+const { data, error, execute, refresh } = await useFetch(`${API_URL}/agencies/sub-agencies`, {
+  watch: [reload],
+  key: 'sub-agencies-key',
+  immediate: true
+  
 })
 definePageMeta({
   layout: "admin",
-  middleware:'admin'
+  middleware: 'admin'
 });
 let entityToCrud: IEntityCrud = reactive({
   name: "subAgency",
@@ -45,7 +42,7 @@ const subMenus = reactive([
   },
 ]);
 
-const formFields:FormType[] = reactive<FormType[]>([
+const formFields: FormType[] = reactive<FormType[]>([
   {
     name: "name",
     type: "text",
@@ -79,18 +76,30 @@ const formFields:FormType[] = reactive<FormType[]>([
 const headers = reactive([
   {
     title: "Nom",
-    align: "start",
+    align: "center",
     sortable: false,
     key: "name",
   },
-  { title: "solde", align: "end", key: "balance" },
-  { title: "Sous-agent", align: "end", key: "user" },
+  {
+    title: "Email",
+    align: "center",
+    sortable: false,
+    key: "email",
+  },
+  {
+    title: "Telephone",
+    align: "center",
+    sortable: false,
+    key: "phone",
+  },
+  { title: "solde", align: "end", key: "account.amount" },
+  
   { title: "Adresse", align: "end", key: "address" },
   { title: "actions", align: "end", key: "actions" },
 ]);
 
 
-const handleSubmit = (value:any) => {
+const handleSubmit = (value: any) => {
   reload.value = true;
 };
 </script>
