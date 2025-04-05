@@ -134,7 +134,6 @@ const calculateCommissions = () => {
         completedFormField.commission =
           `${data?.commission} ${data?.currency}` || data?.commission;
         completedFormField.amountWithCommission =
-          `${data?.amountWithCommission} ${data?.currency}` ||
           data?.amountWithCommission;
       }
 
