@@ -7,11 +7,11 @@ cp ~/apps/clients-projects/mike/transacmoney_admin/ecosystem-prod.config ~/apps/
 echo "5) Chargement de NVM et installation des dépendances..."
 export NVM_DIR=~/.nvm
 source ~/.nvm/nvm.sh || { echo "Échec du chargement de NVM."; exit 1; }
-pnpm install || { echo "Échec de l'installation des dépendances."; exit 1; }
+yarn install || { echo "Échec de l'installation des dépendances."; exit 1; }
 
 # Construire l'application
 echo "6) Build de l'application..."
-pnpm run build || { echo "Échec du build."; exit 1; }
+yarn run build || { echo "Échec du build."; exit 1; }
 
 # Gérer le processus avec PM2
 
