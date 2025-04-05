@@ -31,4 +31,52 @@ export const processCommissions = (completedFormField: any, accessToken: string)
             });
     });
 };
-  
+
+
+export const getTransactionStatsByAgency = ( accessToken: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      $fetch(`${API_URL}/transactions/commission-by-agency`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((response: any) => {
+          if (response.statusCode === 200) {
+            resolve(response?.data);
+          } else {
+            reject(new Error("Unexpected response status"));
+          }
+        })
+        .catch((error: any) => {
+          toast.error(error.message, {
+            delay: 3000,
+          });
+          reject(error);
+        });
+    });
+  };
+
+export const findCommissionsByAgencyId = ( accessToken: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    $fetch(`${API_URL}/transaction-commissions/find-by-agency`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((response: any) => {
+        if (response.statusCode === 200) {
+          resolve(response?.data);
+        } else {
+          reject(new Error("Unexpected response status"));
+        }
+      })
+      .catch((error: any) => {
+        toast.error(error.message, {
+          delay: 3000,
+        });
+        reject(error);
+      });
+  });
+};
